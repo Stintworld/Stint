@@ -30,12 +30,12 @@ public class JobController {
 	private JobService jobService;
 	
 	@PostMapping("jobs/addjob/{employerId}")
-      public ResponseEntity<ResponseStructure<String>> addJob(@RequestBody JobRequestDto jobRequestDto ,@PathVariable Long employerId) {
+      public ResponseEntity<ResponseStructure<JobResponseDto>> addJob(@RequestBody JobRequestDto jobRequestDto ,@PathVariable Long employerId) {
 		return jobService.addJob(jobRequestDto, employerId);	
 	}
 	 
 	@GetMapping("jobs/getalljobs")
-	public ResponseEntity<ResponseStructure<List<Job>>> getAllJobs() {
+	public ResponseEntity<ResponseStructure<List<JobResponseDto>>> getAllJobs() {
 		return jobService.getAllJobs();
 	}
 	

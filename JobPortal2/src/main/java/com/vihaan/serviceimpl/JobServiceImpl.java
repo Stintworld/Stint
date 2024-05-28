@@ -42,7 +42,7 @@ public class JobServiceImpl implements JobService {
 	private EmployerRepo employerRepo;
 	
 	@Override
-	public ResponseEntity<ResponseStructure<String>> addJob(JobRequestDto requestDto,long employerId) {
+	public ResponseEntity<ResponseStructure<JobResponseDto>> addJob(JobRequestDto requestDto,long employerId) {
 
 		Optional<Employer> optional = employerRepo.findById(employerId);
 		if (optional.isEmpty()) {
@@ -58,22 +58,29 @@ public class JobServiceImpl implements JobService {
                job.setJobCreateDatetime(LocalDateTime.now());
                employerRepo.save(employer);
                jobRepo.save(job);
-               ResponseStructure<String>structure= new ResponseStructure<String>();
+               JobResponseDto jobResponseDto = this.modelMapper.map(job, JobResponseDto.class);
+               ResponseStructure<JobResponseDto>structure= new ResponseStructure<JobResponseDto>();
                structure.setMessage("Job added Successfully");
                structure.setStatusCode(HttpStatus.CREATED.value());
-               structure.setData(requestDto.getJobTitle()+" Job Added Successfully ");
+               structure.setData(jobResponseDto);
                
-		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.CREATED);
+		return new ResponseEntity<ResponseStructure<JobResponseDto>>(structure,HttpStatus.CREATED);
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<List<Job>>> getAllJobs() {
+	public ResponseEntity<ResponseStructure<List<JobResponseDto>>> getAllJobs() {
 		List<Job> jobs = jobRepo.findAll();
-		ResponseStructure<List<Job>>structure= new ResponseStructure<List<Job>>();
-		structure.setData(jobs);
+		ArrayList<JobResponseDto>dtos= new ArrayList<JobResponseDto>();
+		
+		for (Job job : jobs) {
+			JobResponseDto jobResponseDto = this.modelMapper.map(job, JobResponseDto.class);
+			dtos.add(jobResponseDto);
+		}
+		ResponseStructure<List<JobResponseDto>>structure= new ResponseStructure<List<JobResponseDto>>();
+		structure.setData(dtos);
 		structure.setMessage("All jobs fetched here");
 		structure.setStatusCode(HttpStatus.FOUND.value());
-		return new ResponseEntity<ResponseStructure<List<Job>>>(structure,HttpStatus.FOUND);
+		return new ResponseEntity<ResponseStructure<List<JobResponseDto>>>(structure,HttpStatus.FOUND);
 	}
 
 	@Override

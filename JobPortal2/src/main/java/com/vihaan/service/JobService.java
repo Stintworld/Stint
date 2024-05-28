@@ -15,8 +15,8 @@ import com.vihaan.util.ResponseStructure;
 public interface JobService {
 
 	
-	public ResponseEntity<ResponseStructure<String>> addJob(JobRequestDto requestDto,long employerId);
-	public ResponseEntity<ResponseStructure<List<Job>>> getAllJobs();
+	public ResponseEntity<ResponseStructure<JobResponseDto>> addJob(JobRequestDto requestDto,long employerId);
+	public ResponseEntity<ResponseStructure<List<JobResponseDto>>> getAllJobs();
 	
 	public ResponseEntity<ResponseStructure<List<JobResponseDto>>> getJobsByEmployerId(@PathVariable long employerId);
 	public ResponseEntity<ResponseStructure<JobResponseDto>> getJobByJobId(Long jobId);
