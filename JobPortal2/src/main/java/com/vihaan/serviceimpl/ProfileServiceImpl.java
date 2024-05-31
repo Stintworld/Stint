@@ -60,7 +60,7 @@ public class ProfileServiceImpl implements ProfileService {
 		     ResponseStructure<ProfileDto>structure=new ResponseStructure<ProfileDto>();
 		     structure.setData(profileDto);
 		     structure.setMessage("Profile data fetched success");
-		     structure.setStatusCode(HttpStatus.FOUND.value());
-		return new ResponseEntity<ResponseStructure<ProfileDto>>(structure,HttpStatus.FOUND);
+		     structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<ProfileDto>>(structure,HttpStatus.OK);
 	}
 }

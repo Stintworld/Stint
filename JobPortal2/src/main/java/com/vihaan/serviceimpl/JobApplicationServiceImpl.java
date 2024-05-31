@@ -67,8 +67,8 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		    ResponseStructure<JobApplicationResponseDto>structure= new ResponseStructure<JobApplicationResponseDto>();
 		    structure.setData(responseDto);
 		    structure.setMessage("Application found");
-		    structure.setStatusCode(HttpStatus.FOUND.value());
-		return new ResponseEntity<ResponseStructure<JobApplicationResponseDto>>(structure,HttpStatus.FOUND);
+		    structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<JobApplicationResponseDto>>(structure,HttpStatus.OK);
 	}
 
 	

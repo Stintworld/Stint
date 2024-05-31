@@ -173,8 +173,8 @@ public class EmployerServiceImpl implements EmployerService{
 		ResponseStructure<EmployerResponseDto>responseStructure= new  ResponseStructure<EmployerResponseDto>();
 		responseStructure.setData(employerResponseDto);
 		responseStructure.setMessage("Employer found by this Id");
-		responseStructure.setStatusCode(HttpStatus.FOUND.value());
-		return new ResponseEntity<ResponseStructure<EmployerResponseDto>>(responseStructure,HttpStatus.FOUND);
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<EmployerResponseDto>>(responseStructure,HttpStatus.OK);
 		
 	}
 

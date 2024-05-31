@@ -79,8 +79,8 @@ public class JobServiceImpl implements JobService {
 		ResponseStructure<List<JobResponseDto>>structure= new ResponseStructure<List<JobResponseDto>>();
 		structure.setData(dtos);
 		structure.setMessage("All jobs fetched here");
-		structure.setStatusCode(HttpStatus.FOUND.value());
-		return new ResponseEntity<ResponseStructure<List<JobResponseDto>>>(structure,HttpStatus.FOUND);
+		structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<List<JobResponseDto>>>(structure,HttpStatus.OK);
 	}
 
 	@Override
@@ -97,8 +97,8 @@ public class JobServiceImpl implements JobService {
 		ResponseStructure<List<JobResponseDto>>structure= new ResponseStructure<List<JobResponseDto>>();
 		structure.setData(jobResponseDtos);
 		structure.setMessage("Data fetched using Employer Id successfully");
-		structure.setStatusCode(HttpStatus.FOUND.value());
-		return new ResponseEntity<ResponseStructure<List<JobResponseDto>>>(structure,HttpStatus.FOUND);
+		structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<List<JobResponseDto>>>(structure,HttpStatus.OK);
 	}
 
 	@Override
@@ -112,9 +112,9 @@ public class JobServiceImpl implements JobService {
 		ResponseStructure<JobResponseDto> responseStructure= new ResponseStructure<JobResponseDto>();
 		responseStructure.setData(responseDto);
 		responseStructure.setMessage("Job Found By this Id");
-		responseStructure.setStatusCode(HttpStatus.FOUND.value());
+		responseStructure.setStatusCode(HttpStatus.OK.value());
 		
-		return new ResponseEntity<ResponseStructure<JobResponseDto>>(responseStructure, HttpStatus.FOUND); 
+		return new ResponseEntity<ResponseStructure<JobResponseDto>>(responseStructure, HttpStatus.OK); 
 		
 	}
 
