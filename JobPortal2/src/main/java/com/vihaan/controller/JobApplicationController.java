@@ -32,4 +32,8 @@ public class JobApplicationController {
     public ResponseEntity<ResponseStructure<JobApplicationResponseDto>>getJobApplicationByApplicantId(@PathVariable Long applicantId) {
 		return jobApplicationService.getJobApplicationByApplicantId(applicantId);
 	}
+	
+	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> getApplicationById(@PathVariable Long applicationid) {
+		return jobApplicationService.getApplicationById(applicationid);
+	}
 }

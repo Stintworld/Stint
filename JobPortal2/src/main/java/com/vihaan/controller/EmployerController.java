@@ -62,4 +62,6 @@ public class EmployerController {
 	public ResponseEntity<ResponseStructure<String>> deleteEmployer(@PathVariable long id,@PathVariable String password) {
 		return employerService.deleteEmployer(id, password);
 	}
+	
+	
 }

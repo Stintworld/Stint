@@ -14,4 +14,6 @@ public interface JobApplicationService  {
 
 	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> getJobApplicationByApplicantId(
 			Long applicantId);
+
+	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> getApplicationById(Long applicationid);
 }

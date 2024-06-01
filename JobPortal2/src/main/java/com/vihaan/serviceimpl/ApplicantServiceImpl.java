@@ -214,6 +214,21 @@ public class ApplicantServiceImpl implements ApplicantService{
 		return new ResponseEntity<paymentLinkResponse>(linkResponse,HttpStatus.CREATED);
 	}
 
+	@Override
+	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> getApplicantById(Long applicantId) {
+		  Optional<Applicant> optional = applicantRepo.findById(applicantId);
+		  if (optional.isEmpty()) {
+			throw new UserNotFoundByIdException("Applicant Not found by this Id");
+		}
+		  Applicant applicant = optional.get();
+		  ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
+		  ResponseStructure<ApplicantResponseDto>structure= new ResponseStructure<ApplicantResponseDto>();
+		  structure.setData(responseDto);
+		  structure.setMessage("Applicant Data fetched sucessfully");
+		  structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<ApplicantResponseDto>>(structure,HttpStatus.OK);
+	}
+
 	
 
 	

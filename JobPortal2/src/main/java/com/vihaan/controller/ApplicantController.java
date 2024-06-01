@@ -68,4 +68,7 @@ public class ApplicantController {
 		return applicantService.createPaymentLink(applicantid);
 	}
 	
+	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> getApplicantById(@PathVariable Long applicantId) {
+		return applicantService.getApplicantById(applicantId);
+	}
 }

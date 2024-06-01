@@ -70,6 +70,21 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		    structure.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<ResponseStructure<JobApplicationResponseDto>>(structure,HttpStatus.OK);
 	}
+	@Override
+	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> getApplicationById(Long applicationid) {
+		    Optional<JobApplication> optional = jobApplicationRepo.findById(applicationid);
+		    if (optional.isEmpty()) {
+				throw  new JobApplicationNotFoundException("No Job Application by this Id");
+			}
+		    JobApplication jobApplication = optional.get();
+		    JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+		    ResponseStructure<JobApplicationResponseDto>structure=new  ResponseStructure<JobApplicationResponseDto>();
+		    structure.setData(responseDto);
+		    structure.setMessage("JobApplication Fetched successfully");
+		    structure.setStatusCode(HttpStatus.OK.value());
+		    
+		return new ResponseEntity<ResponseStructure<JobApplicationResponseDto>>(structure,HttpStatus.OK);
+	}
 
 	
 }

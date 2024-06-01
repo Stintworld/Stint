@@ -34,5 +34,7 @@ public	ResponseEntity<byte[]> getApplicantResume(Long applicantId);
 
 public ResponseEntity<paymentLinkResponse> createPaymentLink(@PathVariable Long applicantId) throws RazorpayException ;
 
+public ResponseEntity<ResponseStructure<ApplicantResponseDto>> getApplicantById(Long applicantId);
+
 
 }
