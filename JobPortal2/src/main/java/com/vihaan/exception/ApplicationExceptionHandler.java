@@ -84,7 +84,7 @@ public class ApplicationExceptionHandler {
 		
 		ErrorStructure errorStructure= new ErrorStructure();
 		errorStructure.setMessage(ex.getMessage());
-		errorStructure.setRootCause("Job not found by this Id ");
+		errorStructure.setRootCause("JobApplication not found by this Id ");
 		errorStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<ErrorStructure>(errorStructure,HttpStatus.NOT_FOUND);
 	}

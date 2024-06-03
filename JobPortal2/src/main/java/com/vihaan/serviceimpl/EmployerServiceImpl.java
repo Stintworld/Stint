@@ -3,6 +3,7 @@ package com.vihaan.serviceimpl;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,33 +36,41 @@ public class EmployerServiceImpl implements EmployerService{
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
+	@Autowired
+	private ModelMapper modelMapper;
 	@Override
-	public ResponseEntity<ResponseStructure> addEmployer(EmployerRequestDto employerRequestDto) {
+	public ResponseEntity<ResponseStructure<EmployerResponseDto>> addEmployer(EmployerRequestDto employerRequestDto) {
 		Employer employer = employerRepo.findByEmployerEmail(employerRequestDto.getEmployerEmail());
 		if (employer!=null) {
 			throw new UserWithSameEmailExist("Employer Email is already in Database");
 		}
 		
-		Employer employer2 = new  Employer();
-		employer2.setEmployerEmail(employerRequestDto.getEmployerEmail());
-		employer2.setEmployerName(employerRequestDto.getEmployerName());
-		employer2.setEmployerPhNo(employerRequestDto.getEmployerPhNo());
-		employer2.setDeleteStatus(ISDELETED.FALSE);
+//		Employer employer2 = new  Employer();
+//		employer2.setEmployerEmail(employerRequestDto.getEmployerEmail());
+//		employer2.setEmployerName(employerRequestDto.getEmployerName());
+//		employer2.setEmployerPhNo(employerRequestDto.getEmployerPhNo());
+//		employer2.setDeleteStatus(ISDELETED.FALSE);
+//		String encodedPassword = passwordEncoder.encode(employerRequestDto.getEmployerPassword());
+//		employer2.setEmployerPassword(encodedPassword);
+//		Employer employer3 = employerRepo.save(employer2);
+//		EmployerResponseDto employerResponseDto= new EmployerResponseDto();
+//		employerResponseDto.setEmployerEmail(employer3.getEmployerEmail());
+//		employerResponseDto.setEmployerId(employer3.getEmployerId());
+//		employerResponseDto.setEmployerName(employer3.getEmployerName());
+//		employerResponseDto.setEmployerPhNo(employer3.getEmployerPhNo());
+//		employerResponseDto.setJobs(employer3.getJobs());
+		
+		Employer employer2 = this.modelMapper.map(employerRequestDto, Employer.class);
 		String encodedPassword = passwordEncoder.encode(employerRequestDto.getEmployerPassword());
 		employer2.setEmployerPassword(encodedPassword);
 		Employer employer3 = employerRepo.save(employer2);
-		EmployerResponseDto employerResponseDto= new EmployerResponseDto();
-		employerResponseDto.setEmployerEmail(employer3.getEmployerEmail());
-		employerResponseDto.setEmployerId(employer3.getEmployerId());
-		employerResponseDto.setEmployerName(employer3.getEmployerName());
-		employerResponseDto.setEmployerPhNo(employer3.getEmployerPhNo());
-		employerResponseDto.setJobs(employer3.getJobs());
+		EmployerResponseDto employerResponseDto = this.modelMapper.map(employer3, EmployerResponseDto.class);
 		ResponseStructure<EmployerResponseDto>responseStructure= new  ResponseStructure<EmployerResponseDto>();
 		responseStructure.setData(employerResponseDto);
 		responseStructure.setMessage("Welcome to Job Portal SignUp Successfull");
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 //    	signupmail(employer3.getEmployerEmail(), employer3.getEmployerName());
-		return new ResponseEntity<ResponseStructure>(responseStructure,HttpStatus.CREATED);
+		return new ResponseEntity<ResponseStructure<EmployerResponseDto>>(responseStructure,HttpStatus.CREATED);
 	}
 
 	@Override
@@ -76,12 +85,14 @@ public class EmployerServiceImpl implements EmployerService{
 		  else if (employer.getDeleteStatus()==ISDELETED.TRUE) {
 				throw  new  EmailNotFoundException("Employer Not Found");
 			}
-		EmployerResponseDto employerResponseDto= new EmployerResponseDto();
-		employerResponseDto.setEmployerEmail(employer.getEmployerEmail());
-		employerResponseDto.setEmployerId(employer.getEmployerId());
-		employerResponseDto.setEmployerName(employer.getEmployerName());
-		employerResponseDto.setEmployerPhNo(employer.getEmployerPhNo());
-		employerResponseDto.setJobs(employer.getJobs());
+//		EmployerResponseDto employerResponseDto= new EmployerResponseDto();
+//		employerResponseDto.setEmployerEmail(employer.getEmployerEmail());
+//		employerResponseDto.setEmployerId(employer.getEmployerId());
+//		employerResponseDto.setEmployerName(employer.getEmployerName());
+//		employerResponseDto.setEmployerPhNo(employer.getEmployerPhNo());
+//		employerResponseDto.setJobs(employer.getJobs());
+		
+		EmployerResponseDto employerResponseDto = this.modelMapper.map(employer, EmployerResponseDto.class);
 		ResponseStructure<EmployerResponseDto>responseStructure= new  ResponseStructure<EmployerResponseDto>();
 		responseStructure.setData(employerResponseDto);
 		responseStructure.setMessage("login Successfull");
@@ -164,12 +175,14 @@ public class EmployerServiceImpl implements EmployerService{
 			throw new UserNotFoundByIdException("Employer not Found By this ID");
 		}
 		Employer employer = optionalEmployer.get();
-		EmployerResponseDto employerResponseDto= new EmployerResponseDto();
-		employerResponseDto.setEmployerEmail(employer.getEmployerEmail());
-		employerResponseDto.setEmployerId(employer.getEmployerId());
-		employerResponseDto.setEmployerName(employer.getEmployerName());
-		employerResponseDto.setEmployerPhNo(employer.getEmployerPhNo());
-		employerResponseDto.setJobs(employer.getJobs());
+//		EmployerResponseDto employerResponseDto= new EmployerResponseDto();
+//		employerResponseDto.setEmployerEmail(employer.getEmployerEmail());
+//		employerResponseDto.setEmployerId(employer.getEmployerId());
+//		employerResponseDto.setEmployerName(employer.getEmployerName());
+//		employerResponseDto.setEmployerPhNo(employer.getEmployerPhNo());
+//		employerResponseDto.setJobs(employer.getJobs());
+		
+		EmployerResponseDto employerResponseDto = this.modelMapper.map(employer, EmployerResponseDto.class);
 		ResponseStructure<EmployerResponseDto>responseStructure= new  ResponseStructure<EmployerResponseDto>();
 		responseStructure.setData(employerResponseDto);
 		responseStructure.setMessage("Employer found by this Id");
@@ -190,12 +203,14 @@ public class EmployerServiceImpl implements EmployerService{
 		 employer.setEmployerPassword(requestDTO.getEmployerPassword());
 		 employer.setEmployerPhNo(requestDTO.getEmployerPhNo());
 		 Employer employer2 = employerRepo.save(employer);
-		 EmployerResponseDto employerResponseDto= new EmployerResponseDto();
-			employerResponseDto.setEmployerEmail(employer2.getEmployerEmail());
-			employerResponseDto.setEmployerId(employer2.getEmployerId());
-			employerResponseDto.setEmployerName(employer2.getEmployerName());
-			employerResponseDto.setEmployerPhNo(employer2.getEmployerPhNo());
-			employerResponseDto.setJobs(employer2.getJobs());
+//		 EmployerResponseDto employerResponseDto= new EmployerResponseDto();
+//			employerResponseDto.setEmployerEmail(employer2.getEmployerEmail());
+//			employerResponseDto.setEmployerId(employer2.getEmployerId());
+//			employerResponseDto.setEmployerName(employer2.getEmployerName());
+//			employerResponseDto.setEmployerPhNo(employer2.getEmployerPhNo());
+//			employerResponseDto.setJobs(employer2.getJobs());
+		 
+		 EmployerResponseDto employerResponseDto = this.modelMapper.map(employer2, EmployerResponseDto.class);
 			ResponseStructure<EmployerResponseDto>responseStructure= new  ResponseStructure<EmployerResponseDto>();
 			responseStructure.setData(employerResponseDto);
 			responseStructure.setMessage("Employer Data Updated");

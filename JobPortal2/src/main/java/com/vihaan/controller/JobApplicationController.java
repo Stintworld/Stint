@@ -32,7 +32,7 @@ public class JobApplicationController {
     public ResponseEntity<ResponseStructure<JobApplicationResponseDto>>getJobApplicationByApplicantId(@PathVariable Long applicantId) {
 		return jobApplicationService.getJobApplicationByApplicantId(applicantId);
 	}
-	
+	@GetMapping("jobapplications/getbyapplicationid/{applicationid}")
 	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> getApplicationById(@PathVariable Long applicationid) {
 		return jobApplicationService.getApplicationById(applicationid);
 	}

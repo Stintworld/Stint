@@ -11,7 +11,7 @@ import com.vihaan.util.ResponseStructure;
 
 public interface EmployerService {
 
-	public ResponseEntity<ResponseStructure> addEmployer(EmployerRequestDto employerRequestDto) ;
+	public ResponseEntity<ResponseStructure<EmployerResponseDto>> addEmployer(EmployerRequestDto employerRequestDto) ;
 	
 	public ResponseEntity<ResponseStructure> employerLogin(LoginDto loginDto) ;
 	

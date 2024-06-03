@@ -68,6 +68,7 @@ public class ApplicantController {
 		return applicantService.createPaymentLink(applicantid);
 	}
 	
+	@GetMapping("applicants/getApplicantById/{applicantId}")
 	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> getApplicantById(@PathVariable Long applicantId) {
 		return applicantService.getApplicantById(applicantId);
 	}

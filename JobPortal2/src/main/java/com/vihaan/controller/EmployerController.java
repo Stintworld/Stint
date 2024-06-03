@@ -28,7 +28,7 @@ public class EmployerController {
 	private EmployerService  employerService;
 	
 	@PostMapping("/employer/add")
-	public ResponseEntity<ResponseStructure> addEmployer(@RequestBody @Validated EmployerRequestDto employerRequestDto){
+	public ResponseEntity<ResponseStructure<EmployerResponseDto>> addEmployer(@RequestBody @Validated EmployerRequestDto employerRequestDto){
 		return employerService.addEmployer(employerRequestDto);
 	}
 	

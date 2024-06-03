@@ -18,7 +18,7 @@ public class JobRequestDto {
 	private List<String>skills;
 	private String companyWebsite;
 	private String aboutCompany;
-	private String companyLocation;
+	private String jobLocation;
 	private JobLevel jobLevel;
 	private String jobType;
 	private String jobStatus;
