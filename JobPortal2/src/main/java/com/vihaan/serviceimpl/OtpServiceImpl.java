@@ -56,8 +56,8 @@ public class OtpServiceImpl implements OtpService{
 		mailMessage.setText("Dear "+ generatedOtp+" is the OTP for accessing Stint");
 		javaMailSender.send(mailMessage);
 		ResponseStructure<String> responseStructure= new ResponseStructure<String>();
-		responseStructure.setData(mailMessage.getText());
-		responseStructure.setMessage(mailMessage.getText());
+		responseStructure.setData("OTP sent ,Please verify ");
+		responseStructure.setMessage("OTP sent");
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		return  new ResponseEntity<ResponseStructure<String>>(responseStructure,HttpStatus.OK);
 		
