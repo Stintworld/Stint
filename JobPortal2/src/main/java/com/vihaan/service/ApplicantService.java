@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.razorpay.RazorpayException;
@@ -24,7 +25,7 @@ public interface ApplicantService {
 	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> addApplicantImage (@PathVariable Long applicantId, @ModelAttribute MultipartFile file)throws IOException;
 	
 	public ResponseEntity<ResponseStructure<String>> addApplicantResume (@PathVariable Long applicantId, @ModelAttribute MultipartFile file)throws IOException;
-	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> applicantLogin(@RequestBody LoginDto loginDto);
+	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> applicantLogin(@RequestHeader String emailId,@RequestHeader String password);
 	
 	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> FetchApplicantById(Long id);
 

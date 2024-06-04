@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,8 +60,8 @@ public class ApplicantController {
 	}
 	
 	@GetMapping("applicants/login")
-	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> applicantLogin(@RequestBody LoginDto loginDto) {
-		  return applicantService.applicantLogin(loginDto);
+	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> applicantLogin(@RequestHeader String emailId,@RequestHeader String password) {
+		  return applicantService.applicantLogin(emailId,password);
 	}
 	
 	@PostMapping("applicants/payment/{applicantid}")

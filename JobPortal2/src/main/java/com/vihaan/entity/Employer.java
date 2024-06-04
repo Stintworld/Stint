@@ -22,8 +22,6 @@ public class Employer {
 	private String employerEmail;
 	private String employerPhNo;
 	private String employerPassword;
-	
-	
 	private ISDELETED deleteStatus;
 	@OneToMany(mappedBy = "employer")
 	@JsonIgnore

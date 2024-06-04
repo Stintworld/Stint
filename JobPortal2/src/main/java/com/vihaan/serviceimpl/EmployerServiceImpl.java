@@ -11,6 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.vihaan.dto.EmployerRequestDto;
 import com.vihaan.dto.EmployerResponseDto;
@@ -74,12 +75,12 @@ public class EmployerServiceImpl implements EmployerService{
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure> employerLogin(LoginDto loginDto) {
-		Employer employer = employerRepo.findByEmployerEmail(loginDto.getEmailId());
+	public ResponseEntity<ResponseStructure> employerLogin( String emailId, String password) {
+		Employer employer = employerRepo.findByEmployerEmail(emailId);
 		if (employer==null) {
 			throw new EmailNotFoundException("Email not Found in DB");
 		}
-		 else if (!passwordEncoder.matches(loginDto.getPassword(), employer.getEmployerPassword())) {
+		 else if (!passwordEncoder.matches(password, employer.getEmployerPassword())) {
 				throw  new PasswordMissMatchException("Password is Not Matching");
 			}
 		  else if (employer.getDeleteStatus()==ISDELETED.TRUE) {
@@ -192,7 +193,7 @@ public class EmployerServiceImpl implements EmployerService{
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<EmployerResponseDto>> updateEmployer(EmployerRequestDto requestDTO,
+	public ResponseEntity<ResponseStructure<String>> updateEmployer(EmployerRequestDto requestDTO,
 			Long id) {
 		 Optional<Employer> optional = employerRepo.findById(id);
 		 if (optional.isEmpty()) {
@@ -211,11 +212,11 @@ public class EmployerServiceImpl implements EmployerService{
 //			employerResponseDto.setJobs(employer2.getJobs());
 		 
 		 EmployerResponseDto employerResponseDto = this.modelMapper.map(employer2, EmployerResponseDto.class);
-			ResponseStructure<EmployerResponseDto>responseStructure= new  ResponseStructure<EmployerResponseDto>();
-			responseStructure.setData(employerResponseDto);
+			ResponseStructure<String>responseStructure= new  ResponseStructure<String>();
+			responseStructure.setData("Employer data Updated");
 			responseStructure.setMessage("Employer Data Updated");
 			responseStructure.setStatusCode(HttpStatus.OK.value());
-			return new ResponseEntity<ResponseStructure<EmployerResponseDto>>(responseStructure,HttpStatus.OK);
+			return new ResponseEntity<ResponseStructure<String>>(responseStructure,HttpStatus.OK);
 	}
 
 	@Override

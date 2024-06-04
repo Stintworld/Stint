@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,8 +34,8 @@ public class EmployerController {
 	}
 	
 	@GetMapping("/employer/login")
-	public ResponseEntity<ResponseStructure> userLogin(@RequestBody @Validated LoginDto dto) {
-		return employerService.employerLogin(dto);
+	public ResponseEntity<ResponseStructure> userLogin(@RequestHeader String emailId,@RequestHeader String password) {
+		return employerService.employerLogin(emailId,password);
 	}
 	
 	@GetMapping("employer/forgotpwd")
@@ -54,7 +55,7 @@ public class EmployerController {
 	}
 	
 	@PutMapping("employer/update/{EmployerId}")
-	public ResponseEntity<ResponseStructure<EmployerResponseDto>>updateEmployer(@RequestBody EmployerRequestDto requestDto,@PathVariable Long EmployerId) {
+	public ResponseEntity<ResponseStructure<String>>updateEmployer(@RequestBody EmployerRequestDto requestDto,@PathVariable Long EmployerId) {
 		return employerService.updateEmployer(requestDto, EmployerId);
 	}
 	

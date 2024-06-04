@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.razorpay.PaymentLink;
@@ -128,13 +129,13 @@ public class ApplicantServiceImpl implements ApplicantService{
 	    }
 	 
 	@Override
-	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> applicantLogin(LoginDto loginDto) {
-		        Applicant applicant = applicantRepo.findByApplicantEmail(loginDto.getEmailId());
+	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> applicantLogin( String emailId, String password) {
+		        Applicant applicant = applicantRepo.findByApplicantEmail(emailId);
 		        if (applicant==null) {
 					throw new EmailNotFoundException("Applicant details not found");
 					
 				}
-		        if (!passwordEncoder.matches(loginDto.getPassword(), applicant.getApplicantPassword())) {
+		        if (!passwordEncoder.matches(password, applicant.getApplicantPassword())) {
 					throw new PasswordMissMatchException("Wrong Password ,please try again");
 				}
 		        ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
