@@ -29,11 +29,16 @@ public class JobApplicationController {
 	}
 	
 	@GetMapping("jobapplications/getbyapplicantid/{applicantId}")
-    public ResponseEntity<ResponseStructure<JobApplicationResponseDto>>getJobApplicationByApplicantId(@PathVariable Long applicantId) {
+    public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>>getJobApplicationByApplicantId(@PathVariable Long applicantId) {
 		return jobApplicationService.getJobApplicationByApplicantId(applicantId);
 	}
 	@GetMapping("jobapplications/getbyapplicationid/{applicationid}")
 	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> getApplicationById(@PathVariable Long applicationid) {
 		return jobApplicationService.getApplicationById(applicationid);
+	}
+	
+	@GetMapping("jobapplications/getbyjobid/{jobId}")
+    public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>>getJobApplicationByJobId(@PathVariable Long jobId) {
+		return jobApplicationService.getApplicationsbyJobId(jobId);
 	}
 }

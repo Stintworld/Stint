@@ -1,6 +1,7 @@
 package com.vihaan.serviceimpl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,18 +58,22 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure,HttpStatus.CREATED);
 	}
 	@Override
-	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> getJobApplicationByApplicantId(
+	public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>> getJobApplicationByApplicantId(
 			Long applicantId) {
-		    JobApplication jobApplication = jobApplicationRepo.findByApplicantId(applicantId);
-		    if (jobApplication==null) {
+		    List<JobApplication> jobApplications = jobApplicationRepo.findByApplicantId(applicantId);
+		    ArrayList<JobApplicationResponseDto>responseDtos= new ArrayList<JobApplicationResponseDto>();
+		    if (jobApplications.isEmpty()) {
 				throw new JobApplicationNotFoundException("JobApplication not found by this Applicant Id");
 			}
-		    JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
-		    ResponseStructure<JobApplicationResponseDto>structure= new ResponseStructure<JobApplicationResponseDto>();
-		    structure.setData(responseDto);
+		  for (JobApplication jobApplication : jobApplications) {
+			   JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+			   responseDtos.add(responseDto);
+		}
+		    ResponseStructure<List<JobApplicationResponseDto>>structure= new ResponseStructure<List<JobApplicationResponseDto>>();
+		    structure.setData(responseDtos);
 		    structure.setMessage("Application found");
 		    structure.setStatusCode(HttpStatus.OK.value());
-		return new ResponseEntity<ResponseStructure<JobApplicationResponseDto>>(structure,HttpStatus.OK);
+		return new ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>>(structure,HttpStatus.OK);
 	}
 	@Override
 	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> getApplicationById(Long applicationid) {
@@ -84,6 +89,20 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		    structure.setStatusCode(HttpStatus.OK.value());
 		    
 		return new ResponseEntity<ResponseStructure<JobApplicationResponseDto>>(structure,HttpStatus.OK);
+	}
+	@Override
+	public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>> getApplicationsbyJobId(Long jobId) {
+		     List<JobApplication> jobApplications= jobApplicationRepo.findByjobId(jobId);
+		     ArrayList<JobApplicationResponseDto>responseDtos=new ArrayList<JobApplicationResponseDto>();
+		     for (JobApplication jobApplication : jobApplications) {
+				JobApplicationResponseDto applicationResponseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+				responseDtos.add(applicationResponseDto);
+			}
+		     ResponseStructure<List<JobApplicationResponseDto>>structure= new ResponseStructure<List<JobApplicationResponseDto>>();
+		     structure.setData(responseDtos);
+		     structure.setMessage("Application fetched ");
+		     structure.setStatusCode(HttpStatus.OK.value());
+		     return new ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>>(structure,HttpStatus.OK);
 	}
 
 	
