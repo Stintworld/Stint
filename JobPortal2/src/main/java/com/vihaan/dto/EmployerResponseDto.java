@@ -15,6 +15,8 @@ public class EmployerResponseDto {
 	private String employerName;
 	private String employerEmail;
 	private String employerPhNo;
+	private String organisation;
+	private String orgLocation;
 	private List<Job>jobs;
 	
 }

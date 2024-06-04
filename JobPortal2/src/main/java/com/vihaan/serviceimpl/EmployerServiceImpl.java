@@ -64,6 +64,7 @@ public class EmployerServiceImpl implements EmployerService{
 		Employer employer2 = this.modelMapper.map(employerRequestDto, Employer.class);
 		String encodedPassword = passwordEncoder.encode(employerRequestDto.getEmployerPassword());
 		employer2.setEmployerPassword(encodedPassword);
+		employer2.setDeleteStatus(ISDELETED.FALSE);
 		Employer employer3 = employerRepo.save(employer2);
 		EmployerResponseDto employerResponseDto = this.modelMapper.map(employer3, EmployerResponseDto.class);
 		ResponseStructure<EmployerResponseDto>responseStructure= new  ResponseStructure<EmployerResponseDto>();

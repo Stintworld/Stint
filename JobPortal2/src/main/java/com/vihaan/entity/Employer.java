@@ -21,6 +21,8 @@ public class Employer {
 	private String employerName;
 	private String employerEmail;
 	private String employerPhNo;
+	private String orgLocation;
+	private String organisation; 
 	private String employerPassword;
 	private ISDELETED deleteStatus;
 	@OneToMany(mappedBy = "employer")
