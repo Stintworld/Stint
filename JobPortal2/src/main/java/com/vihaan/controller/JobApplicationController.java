@@ -27,7 +27,6 @@ public class JobApplicationController {
 	public ResponseEntity<ResponseStructure<String>> addJobApplication(@PathVariable long jobId,@PathVariable long applicantId ) {
 		return jobApplicationService.addJobApplication(jobId, applicantId);
 	}
-	
 	@GetMapping("jobapplications/getbyapplicantid/{applicantId}")
     public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>>getJobApplicationByApplicantId(@PathVariable Long applicantId) {
 		return jobApplicationService.getJobApplicationByApplicantId(applicantId);

@@ -67,6 +67,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 			}
 		  for (JobApplication jobApplication : jobApplications) {
 			   JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+			   responseDto.setJobSerial(jobApplication.getJob().getJobId());
 			   responseDtos.add(responseDto);
 		}
 		    ResponseStructure<List<JobApplicationResponseDto>>structure= new ResponseStructure<List<JobApplicationResponseDto>>();
@@ -83,6 +84,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 			}
 		    JobApplication jobApplication = optional.get();
 		    JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+		    responseDto.setJobSerial(jobApplication.getJob().getJobId());
 		    ResponseStructure<JobApplicationResponseDto>structure=new  ResponseStructure<JobApplicationResponseDto>();
 		    structure.setData(responseDto);
 		    structure.setMessage("JobApplication Fetched successfully");
@@ -96,6 +98,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		     ArrayList<JobApplicationResponseDto>responseDtos=new ArrayList<JobApplicationResponseDto>();
 		     for (JobApplication jobApplication : jobApplications) {
 				JobApplicationResponseDto applicationResponseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+				applicationResponseDto.setJobSerial(jobApplication.getJob().getJobId());
 				responseDtos.add(applicationResponseDto);
 			}
 		     ResponseStructure<List<JobApplicationResponseDto>>structure= new ResponseStructure<List<JobApplicationResponseDto>>();

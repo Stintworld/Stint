@@ -11,7 +11,7 @@ public class JobApplicationResponseDto {
 	
      private long jobApplicationId;
 	private LocalDateTime jobApplicationDateTime;
-	
+	private long jobSerial;
 	private String jobTitle;
 	private String jobDiscription;
 	private String company;
