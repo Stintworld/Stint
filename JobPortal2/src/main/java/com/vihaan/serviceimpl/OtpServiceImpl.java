@@ -1,5 +1,6 @@
 package com.vihaan.serviceimpl;
 
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,13 @@ public class OtpServiceImpl implements OtpService{
 	@Override
 	public ResponseEntity<ResponseStructure<String>> sendOtpMail(String toMail) {
 		 Integer generatedOtp = generateOtp();
-		
-		    Otp otp2 = otpRepo.findByGmail(toMail);
+			
+
+		    Optional<Otp> optional = otpRepo.findByGmail(toMail);
 		    Otp otp= new Otp();
-		    if (otp2!=null) {
-				otp2.setOtpNumber(generatedOtp);
-				Long otpId = otp2.getOtpId();
+		    if (optional.isPresent()) {
+				optional.get().setOtpNumber(generatedOtp);
+				Long otpId = optional.get().getOtpId();
 				otp.setOtpId(otpId);
 				otp.setGmail(toMail);
 				otp.setOtpNumber(generatedOtp);
@@ -65,17 +67,17 @@ public class OtpServiceImpl implements OtpService{
 
 	@Override
 	public ResponseEntity<ResponseStructure<String>> verifyOtp(String mail, int otp) {
-		      Otp otp2 = otpRepo.findByGmail(mail);
-		      if (otp2==null) {
-				throw new ForbiddenOperationException("Email otp not yet sent to user");
-			}
-		      if (otp2.getOtpNumber()!=otp) {
-		    	  throw new ForbiddenOperationException("Wrong OTP please enter valid otp");
-			}
-		      ResponseStructure<String>structure= new ResponseStructure<String>();
-		      structure.setData("OTP verified ");
-		      structure.setMessage("OTP verified Successfully ");
-		      structure.setStatusCode(HttpStatus.OK.value());
+		 Optional<Otp> optional = otpRepo.findByGmail(mail);
+	      if (optional.isEmpty()) {
+			throw new ForbiddenOperationException("Email otp not yet sent to user");
+		}
+	      if (optional.get().getOtpNumber()!=otp) {
+	    	  throw new ForbiddenOperationException("Wrong OTP please enter valid otp");
+		}
+	      ResponseStructure<String>structure= new ResponseStructure<String>();
+	      structure.setData("OTP verified ");
+	      structure.setMessage("OTP verified Successfully ");
+	      structure.setStatusCode(HttpStatus.OK.value());
 		      
 		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
 	}
