@@ -24,6 +24,7 @@ public class JobResponseDto {
 	private String jobStatus;
 	private String aboutCompany;
 	private LocalDateTime jobCreateDatetime;
+	private byte[] organisationLogo;
 	
 	private String employerName;
 	private String employerEmail;
