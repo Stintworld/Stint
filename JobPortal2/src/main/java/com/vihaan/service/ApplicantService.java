@@ -37,5 +37,7 @@ public ResponseEntity<paymentLinkResponse> createPaymentLink(@PathVariable Long 
 
 public ResponseEntity<ResponseStructure<ApplicantResponseDto>> getApplicantById(Long applicantId);
 
+public ResponseEntity<ResponseStructure<String>> resetPassword(String mail, String newPassword, String confirmPwd);
+
 
 }

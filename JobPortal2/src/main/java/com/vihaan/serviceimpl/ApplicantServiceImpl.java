@@ -21,10 +21,12 @@ import com.vihaan.dto.ApplicantRequestDto;
 import com.vihaan.dto.ApplicantResponseDto;
 import com.vihaan.dto.LoginDto;
 import com.vihaan.dto.ProfileDto;
+import com.vihaan.entity.Admin;
 import com.vihaan.entity.Applicant;
 import com.vihaan.entity.ISDELETED;
 import com.vihaan.entity.Profile;
 import com.vihaan.exception.EmailNotFoundException;
+import com.vihaan.exception.ForbiddenOperationException;
 import com.vihaan.exception.PasswordMissMatchException;
 import com.vihaan.exception.UserNotFoundByIdException;
 import com.vihaan.exception.UserWithSameEmailExist;
@@ -228,6 +230,26 @@ public class ApplicantServiceImpl implements ApplicantService{
 		  structure.setMessage("Applicant Data fetched sucessfully");
 		  structure.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<ResponseStructure<ApplicantResponseDto>>(structure,HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<String>> resetPassword(String mail, String newPassword, String confirmPwd) {
+		Applicant applicant = applicantRepo.findByApplicantEmail(mail);
+		   if (applicant==null) {
+				throw new EmailNotFoundException("applicant details not found");
+				
+			}
+	        if (!newPassword.equals(confirmPwd)) {
+				throw new ForbiddenOperationException("NewPassword and Confirm password mismatch");
+			}
+	        String encodedPassword = passwordEncoder.encode(newPassword);
+	        applicant.setApplicantPassword(encodedPassword);
+	        applicantRepo.save(applicant);
+	        ResponseStructure<String>structure= new ResponseStructure<String>();
+	        structure.setData("reset password successful");
+	        structure.setMessage("password reset done");
+	        structure.setStatusCode(HttpStatus.OK.value());
+	        return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
 	}
 
 	

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,7 +51,7 @@ public class ApplicantController {
 	}
 	
 	@GetMapping("applicants/findImage/{applicantId}")
-	public ResponseEntity<byte[]> getProductImage(@PathVariable  Long applicantId){
+	public ResponseEntity<byte[]> getApplicantImage(@PathVariable  Long applicantId){
 		return applicantService.getApplicantImage(applicantId);
 	}
 	
@@ -72,5 +73,9 @@ public class ApplicantController {
 	@GetMapping("applicants/getApplicantById/{applicantId}")
 	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> getApplicantById(@PathVariable Long applicantId) {
 		return applicantService.getApplicantById(applicantId);
+	}
+	@PutMapping("applicants/resetpwd")
+	public ResponseEntity<ResponseStructure<String>> resetPassword(@RequestParam String mail,@RequestParam String newPassword,@RequestParam String confirmPwd) {
+		return applicantService.resetPassword(mail,newPassword,confirmPwd);
 	}
 }
