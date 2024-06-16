@@ -21,6 +21,7 @@ import com.vihaan.dto.JobRequestDto;
 import com.vihaan.dto.JobResponseDto;
 import com.vihaan.entity.Applicant;
 import com.vihaan.entity.Employer;
+import com.vihaan.entity.ISDELETED;
 import com.vihaan.entity.Job;
 import com.vihaan.exception.UserNotFoundByIdException;
 import com.vihaan.exception.jobNotFoundException;
@@ -56,6 +57,7 @@ public class JobServiceImpl implements JobService {
                employer.setJobs(jobs);
                job.setEmployer(employer);
                job.setJobCreateDatetime(LocalDateTime.now());
+               job.setIsdeleted(ISDELETED.FALSE);
                employerRepo.save(employer);
                jobRepo.save(job);
                JobResponseDto jobResponseDto = this.modelMapper.map(job, JobResponseDto.class);
@@ -90,9 +92,10 @@ public class JobServiceImpl implements JobService {
 		List<JobResponseDto>jobResponseDtos= new ArrayList<JobResponseDto>();
 		for (Job job : jobs) {
 			Employer employer = job.getEmployer();
-              JobResponseDto jobResponseDto = this.modelMapper.map(job, JobResponseDto.class);
-            jobResponseDtos.add(jobResponseDto);
-		
+			if (job.getIsdeleted()==ISDELETED.FALSE) {
+				JobResponseDto jobResponseDto = this.modelMapper.map(job, JobResponseDto.class);
+				jobResponseDtos.add(jobResponseDto);
+			}
 		}
 		ResponseStructure<List<JobResponseDto>>structure= new ResponseStructure<List<JobResponseDto>>();
 		structure.setData(jobResponseDtos);
@@ -104,7 +107,7 @@ public class JobServiceImpl implements JobService {
 	@Override
 	public ResponseEntity<ResponseStructure<JobResponseDto>> getJobByJobId(Long jobId) {
 		Optional<Job> optionalJob = jobRepo.findById(jobId);
-		if (optionalJob.isEmpty()) {
+		if (optionalJob.isEmpty()||optionalJob.get().getIsdeleted()==ISDELETED.TRUE) {
 			throw new jobNotFoundException("Job not found by this Id");
 		}
 		Job job = optionalJob.get();
@@ -121,7 +124,7 @@ public class JobServiceImpl implements JobService {
 	@Override
 	public ResponseEntity<ResponseStructure<String>> addOrgLogo(Long jobid,MultipartFile file) throws IOException {
 		    Optional<Job> optional = jobRepo.findById(jobid);
-		    if (optional.isEmpty()) {
+		    if (optional.isEmpty()||optional.get().getIsdeleted()==ISDELETED.TRUE) {
 				throw new jobNotFoundException("Job Not found by this Id to add logo");
 			}
 		    Job job = optional.get();
@@ -137,7 +140,7 @@ public class JobServiceImpl implements JobService {
 	@Override
 	public ResponseEntity<byte[]> getOrganistionLogo(Long jobId) {
 		 Optional<Job> job = jobRepo.findById(jobId);
-	        if (job.isPresent()) {
+	        if (job.isPresent()||job.get().getIsdeleted()==ISDELETED.FALSE) {
 	            byte[] logo = job.get().getOrganisationLogo();
 	           
 	            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG ).body(logo);
@@ -146,5 +149,18 @@ public class JobServiceImpl implements JobService {
 	            return ResponseEntity.notFound().build();
 	        }
 	}
-
+  public ResponseEntity<ResponseStructure<String>> deleteJob(Long jobId) {
+	Optional<Job> optional = jobRepo.findById(jobId);
+	if (optional.isEmpty()||optional.get().getIsdeleted()==ISDELETED.TRUE) {
+		throw new jobNotFoundException("Job not found by this Id");
+	}
+	Job job = optional.get();
+	job.setIsdeleted(ISDELETED.TRUE);
+	jobRepo.save(job);
+	ResponseStructure<String>structure= new ResponseStructure<String>();
+	structure.setData("Data deleted from DB");
+	structure.setMessage("Job deleted from DB");
+	structure.setStatusCode(HttpStatus.OK.value());
+	return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
+}
 }

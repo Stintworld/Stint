@@ -182,7 +182,6 @@ public class EmployerServiceImpl implements EmployerService{
 		}
 		 Employer employer = optional.get();
 		 employer.setEmployerName(requestDTO.getEmployerName());
-		 employer.setEmployerPassword(requestDTO.getEmployerPassword());
 		 employer.setEmployerPhNo(requestDTO.getEmployerPhNo());
 		 employer.setOrganisation(requestDTO.getOrganisation());
 		 employer.setOrgLocation(requestDTO.getOrgLocation());

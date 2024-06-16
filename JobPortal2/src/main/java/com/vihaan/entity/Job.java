@@ -71,6 +71,6 @@ public class Job {
 	 @Column(length = 100000 ,columnDefinition = "LONGBLOB")
 	private byte[] organisationLogo;
 
-
+    private ISDELETED isdeleted;
 	
 }

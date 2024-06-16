@@ -23,6 +23,6 @@ public interface JobService {
 	public ResponseEntity<ResponseStructure<String>> addOrgLogo(Long jobid, MultipartFile file) throws IOException ;
 	public ResponseEntity<byte[]> getOrganistionLogo(Long jobId);
 	
-	
+	public ResponseEntity<ResponseStructure<String>> deleteJob(Long jobId);
 	
 }

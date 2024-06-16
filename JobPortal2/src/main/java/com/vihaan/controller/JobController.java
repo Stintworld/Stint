@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,5 +58,10 @@ public class JobController {
 	@GetMapping("jobs/getlogo/{jobId}")
 	public ResponseEntity<byte[]> getOrganistionLogo(@PathVariable Long jobId) {
 		return jobService.getOrganistionLogo(jobId)	;
+	}
+	
+	@PutMapping("jobs/deletejob/{jobId}")
+	public ResponseEntity<ResponseStructure<String>> deleteJob(@PathVariable Long jobId){
+		return jobService.deleteJob(jobId);
 	}
 }
