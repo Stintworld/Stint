@@ -20,8 +20,10 @@ public class EmployerRequestDto {
 	@Min(value = 6000000000l ,message = "Phone Number cannot start with below `6`!!!")
 	@Max(value = 9999999999l,message = "Phone number cannot exceed `10` Digits!!!")
 	private String employerPhNo;
+	
 	@NotBlank(message = "orgName is required")
 	private String organisation;
+	
 	@NotBlank(message = "orgLocation  is required")
 	private String orgLocation;
 	

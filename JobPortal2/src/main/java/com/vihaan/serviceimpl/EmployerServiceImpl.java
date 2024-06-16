@@ -46,21 +46,6 @@ public class EmployerServiceImpl implements EmployerService{
 			throw new UserWithSameEmailExist("Employer Email is already in Database");
 		}
 		
-//		Employer employer2 = new  Employer();
-//		employer2.setEmployerEmail(employerRequestDto.getEmployerEmail());
-//		employer2.setEmployerName(employerRequestDto.getEmployerName());
-//		employer2.setEmployerPhNo(employerRequestDto.getEmployerPhNo());
-//		employer2.setDeleteStatus(ISDELETED.FALSE);
-//		String encodedPassword = passwordEncoder.encode(employerRequestDto.getEmployerPassword());
-//		employer2.setEmployerPassword(encodedPassword);
-//		Employer employer3 = employerRepo.save(employer2);
-//		EmployerResponseDto employerResponseDto= new EmployerResponseDto();
-//		employerResponseDto.setEmployerEmail(employer3.getEmployerEmail());
-//		employerResponseDto.setEmployerId(employer3.getEmployerId());
-//		employerResponseDto.setEmployerName(employer3.getEmployerName());
-//		employerResponseDto.setEmployerPhNo(employer3.getEmployerPhNo());
-//		employerResponseDto.setJobs(employer3.getJobs());
-		
 		Employer employer2 = this.modelMapper.map(employerRequestDto, Employer.class);
 		String encodedPassword = passwordEncoder.encode(employerRequestDto.getEmployerPassword());
 		employer2.setEmployerPassword(encodedPassword);
@@ -87,12 +72,7 @@ public class EmployerServiceImpl implements EmployerService{
 		  else if (employer.getDeleteStatus()==ISDELETED.TRUE) {
 				throw  new  EmailNotFoundException("Employer Not Found");
 			}
-//		EmployerResponseDto employerResponseDto= new EmployerResponseDto();
-//		employerResponseDto.setEmployerEmail(employer.getEmployerEmail());
-//		employerResponseDto.setEmployerId(employer.getEmployerId());
-//		employerResponseDto.setEmployerName(employer.getEmployerName());
-//		employerResponseDto.setEmployerPhNo(employer.getEmployerPhNo());
-//		employerResponseDto.setJobs(employer.getJobs());
+
 		
 		EmployerResponseDto employerResponseDto = this.modelMapper.map(employer, EmployerResponseDto.class);
 		ResponseStructure<EmployerResponseDto>responseStructure= new  ResponseStructure<EmployerResponseDto>();
@@ -204,13 +184,10 @@ public class EmployerServiceImpl implements EmployerService{
 		 employer.setEmployerName(requestDTO.getEmployerName());
 		 employer.setEmployerPassword(requestDTO.getEmployerPassword());
 		 employer.setEmployerPhNo(requestDTO.getEmployerPhNo());
+		 employer.setOrganisation(requestDTO.getOrganisation());
+		 employer.setOrgLocation(requestDTO.getOrgLocation());
 		 Employer employer2 = employerRepo.save(employer);
-//		 EmployerResponseDto employerResponseDto= new EmployerResponseDto();
-//			employerResponseDto.setEmployerEmail(employer2.getEmployerEmail());
-//			employerResponseDto.setEmployerId(employer2.getEmployerId());
-//			employerResponseDto.setEmployerName(employer2.getEmployerName());
-//			employerResponseDto.setEmployerPhNo(employer2.getEmployerPhNo());
-//			employerResponseDto.setJobs(employer2.getJobs());
+
 		 
 		 EmployerResponseDto employerResponseDto = this.modelMapper.map(employer2, EmployerResponseDto.class);
 			ResponseStructure<String>responseStructure= new  ResponseStructure<String>();
