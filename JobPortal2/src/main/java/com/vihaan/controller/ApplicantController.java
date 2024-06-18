@@ -1,6 +1,7 @@
 package com.vihaan.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -77,5 +78,9 @@ public class ApplicantController {
 	@PutMapping("applicants/resetpwd")
 	public ResponseEntity<ResponseStructure<String>> resetPassword(@RequestParam String mail,@RequestParam String newPassword,@RequestParam String confirmPwd) {
 		return applicantService.resetPassword(mail,newPassword,confirmPwd);
+	}
+	@GetMapping("applicants/getbyjobid/{jobId}")
+	public ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>> getApplicantListByJobId(@PathVariable Long jobId) {
+		return applicantService.getApplicantListByJobId(jobId);
 	}
 }

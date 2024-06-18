@@ -1,6 +1,7 @@
 package com.vihaan.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -38,6 +39,8 @@ public ResponseEntity<paymentLinkResponse> createPaymentLink(@PathVariable Long 
 public ResponseEntity<ResponseStructure<ApplicantResponseDto>> getApplicantById(Long applicantId);
 
 public ResponseEntity<ResponseStructure<String>> resetPassword(String mail, String newPassword, String confirmPwd);
+
+public ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>> getApplicantListByJobId(Long jobId);
 
 
 }

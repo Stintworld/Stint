@@ -1,6 +1,8 @@
 package com.vihaan.serviceimpl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.json.JSONObject;
@@ -250,6 +252,22 @@ public class ApplicantServiceImpl implements ApplicantService{
 	        structure.setMessage("password reset done");
 	        structure.setStatusCode(HttpStatus.OK.value());
 	        return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>> getApplicantListByJobId(Long jobId) {
+		List<Applicant> applicants = applicantRepo.getApplicantsByJobId(jobId);
+		List<ApplicantResponseDto>responseDtos= new ArrayList<ApplicantResponseDto>();
+		for (Applicant applicant : applicants) {
+			ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
+			responseDtos.add(responseDto);
+		}
+		ResponseStructure<List<ApplicantResponseDto>>structure= new ResponseStructure<List<ApplicantResponseDto>>();
+		structure.setData(responseDtos);
+		structure.setMessage("Applicants fetched ");
+		structure.setStatusCode(HttpStatus.OK.value());
+		
+		return new ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>>(structure,HttpStatus.OK);
 	}
 
 	

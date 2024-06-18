@@ -138,7 +138,13 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		  jobApplication.setReasonForRejection(reason);
 		  JobApplication jobApplication2 = jobApplicationRepo.save(jobApplication);
 		  JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication2, JobApplicationResponseDto.class);
-		  
+		  responseDto.setCompany(jobApplication.getJob().getCompany());
+		  responseDto.setCompanyWebsite(jobApplication2.getJob().getCompanyWebsite());
+		  responseDto.setSkills(jobApplication2.getJob().getSkills());
+		  responseDto.setEmployerName(jobApplication2.getJob().getEmployer().getEmployerName());
+		  responseDto.setEmployerEmail(jobApplication2.getJob().getEmployer().getEmployerEmail());
+		  responseDto.setEmployerPhNo(jobApplication2.getJob().getEmployer().getEmployerPhNo());
+		responseDto.setJobSerial(jobApplication2.getJob().getJobId());
 		  ResponseStructure<JobApplicationResponseDto>structure= new ResponseStructure<JobApplicationResponseDto>();
 		  structure.setData(responseDto);
 		  structure.setMessage("Job Application Updated successfully");
