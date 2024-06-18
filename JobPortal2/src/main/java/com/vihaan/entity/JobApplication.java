@@ -32,7 +32,7 @@ public class JobApplication {
 	@JoinColumn
 	@Lazy
 	private Applicant applicant;
-
+    private JobApplicationStatus jobApplicationStatus;
 	private String reasonForRejection;
 	
 }

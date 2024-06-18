@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.vihaan.dto.JobApplicationResponseDto;
 import com.vihaan.entity.Job;
+import com.vihaan.entity.JobApplication;
+import com.vihaan.entity.JobApplicationStatus;
 import com.vihaan.util.ResponseStructure;
 
 public interface JobApplicationService  {
@@ -20,4 +22,7 @@ public interface JobApplicationService  {
 	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> getApplicationById(Long applicationid);
 	
 	public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>> getApplicationsbyJobId(Long jobId) ;
+
+	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> updateJobApplication(Long applicationId,
+			JobApplicationStatus applicationStatus,String reason);
 }

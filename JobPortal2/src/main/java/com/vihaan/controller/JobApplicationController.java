@@ -9,9 +9,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vihaan.dto.JobApplicationResponseDto;
+import com.vihaan.entity.JobApplication;
+import com.vihaan.entity.JobApplicationStatus;
 import com.vihaan.service.JobApplicationService;
 import com.vihaan.util.ResponseStructure;
 
@@ -39,5 +43,9 @@ public class JobApplicationController {
 	@GetMapping("jobapplications/getbyjobid/{jobId}")
     public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>>getJobApplicationByJobId(@PathVariable Long jobId) {
 		return jobApplicationService.getApplicationsbyJobId(jobId);
+	}
+	@PutMapping("jobapplications/updateapplication/{applicationId}")
+	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> updateJobApplication(@PathVariable Long applicationId,@RequestParam JobApplicationStatus applicationStatus,String reason){
+		return jobApplicationService.updateJobApplication(applicationId,applicationStatus,reason);
 	}
 }

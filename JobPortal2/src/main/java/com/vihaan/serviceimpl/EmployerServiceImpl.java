@@ -78,8 +78,8 @@ public class EmployerServiceImpl implements EmployerService{
 		ResponseStructure<EmployerResponseDto>responseStructure= new  ResponseStructure<EmployerResponseDto>();
 		responseStructure.setData(employerResponseDto);
 		responseStructure.setMessage("login Successfull");
-		responseStructure.setStatusCode(HttpStatus.CREATED.value());
-		return new ResponseEntity<ResponseStructure>(responseStructure,HttpStatus.CREATED);
+		responseStructure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure>(responseStructure,HttpStatus.OK);
 	}
 
 	@Override
@@ -157,12 +157,7 @@ public class EmployerServiceImpl implements EmployerService{
 			throw new UserNotFoundByIdException("Employer not Found By this ID");
 		}
 		Employer employer = optionalEmployer.get();
-//		EmployerResponseDto employerResponseDto= new EmployerResponseDto();
-//		employerResponseDto.setEmployerEmail(employer.getEmployerEmail());
-//		employerResponseDto.setEmployerId(employer.getEmployerId());
-//		employerResponseDto.setEmployerName(employer.getEmployerName());
-//		employerResponseDto.setEmployerPhNo(employer.getEmployerPhNo());
-//		employerResponseDto.setJobs(employer.getJobs());
+
 		
 		EmployerResponseDto employerResponseDto = this.modelMapper.map(employer, EmployerResponseDto.class);
 		ResponseStructure<EmployerResponseDto>responseStructure= new  ResponseStructure<EmployerResponseDto>();

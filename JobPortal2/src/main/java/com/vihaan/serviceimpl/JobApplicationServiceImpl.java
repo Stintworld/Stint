@@ -15,6 +15,7 @@ import com.vihaan.dto.JobApplicationResponseDto;
 import com.vihaan.entity.Applicant;
 import com.vihaan.entity.Job;
 import com.vihaan.entity.JobApplication;
+import com.vihaan.entity.JobApplicationStatus;
 import com.vihaan.exception.JobApplicationNotFoundException;
 import com.vihaan.exception.UserNotFoundByIdException;
 import com.vihaan.repo.ApplicantRepo;
@@ -45,6 +46,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 			}
 		     JobApplication jobApplication= new JobApplication();
 		     jobApplication.setApplicant(optional.get());
+		     jobApplication.setJobApplicationStatus(JobApplicationStatus.SUBMITTED);
 		     Job job = optional2.get();
 		     jobApplication.setJob(job);
 		     jobApplication.setJobApplicationDateTime(LocalDateTime.now());
@@ -67,6 +69,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 			}
 		  for (JobApplication jobApplication : jobApplications) {
 			   JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+			   responseDto.setCompany(jobApplication.getJob().getCompany());
+			  responseDto.setCompanyWebsite(jobApplication.getJob().getCompanyWebsite());
+			  responseDto.setSkills(jobApplication.getJob().getSkills());
+			  responseDto.setEmployerName(jobApplication.getJob().getEmployer().getEmployerName());
+			  responseDto.setEmployerEmail(jobApplication.getJob().getEmployer().getEmployerEmail());
+			  responseDto.setEmployerPhNo(jobApplication.getJob().getEmployer().getEmployerPhNo());
 			   responseDto.setJobSerial(jobApplication.getJob().getJobId());
 			   responseDtos.add(responseDto);
 		}
@@ -84,6 +92,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 			}
 		    JobApplication jobApplication = optional.get();
 		    JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+		    responseDto.setCompany(jobApplication.getJob().getCompany());
+			  responseDto.setCompanyWebsite(jobApplication.getJob().getCompanyWebsite());
+			  responseDto.setSkills(jobApplication.getJob().getSkills());
+			  responseDto.setEmployerName(jobApplication.getJob().getEmployer().getEmployerName());
+			  responseDto.setEmployerEmail(jobApplication.getJob().getEmployer().getEmployerEmail());
+			  responseDto.setEmployerPhNo(jobApplication.getJob().getEmployer().getEmployerPhNo());
 		    responseDto.setJobSerial(jobApplication.getJob().getJobId());
 		    ResponseStructure<JobApplicationResponseDto>structure=new  ResponseStructure<JobApplicationResponseDto>();
 		    structure.setData(responseDto);
@@ -97,9 +111,15 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		     List<JobApplication> jobApplications= jobApplicationRepo.findByjobId(jobId);
 		     ArrayList<JobApplicationResponseDto>responseDtos=new ArrayList<JobApplicationResponseDto>();
 		     for (JobApplication jobApplication : jobApplications) {
-				JobApplicationResponseDto applicationResponseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
-				applicationResponseDto.setJobSerial(jobApplication.getJob().getJobId());
-				responseDtos.add(applicationResponseDto);
+				JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+				 responseDto.setCompany(jobApplication.getJob().getCompany());
+				  responseDto.setCompanyWebsite(jobApplication.getJob().getCompanyWebsite());
+				  responseDto.setSkills(jobApplication.getJob().getSkills());
+				  responseDto.setEmployerName(jobApplication.getJob().getEmployer().getEmployerName());
+				  responseDto.setEmployerEmail(jobApplication.getJob().getEmployer().getEmployerEmail());
+				  responseDto.setEmployerPhNo(jobApplication.getJob().getEmployer().getEmployerPhNo());
+				responseDto.setJobSerial(jobApplication.getJob().getJobId());
+				responseDtos.add(responseDto);
 			}
 		     ResponseStructure<List<JobApplicationResponseDto>>structure= new ResponseStructure<List<JobApplicationResponseDto>>();
 		     structure.setData(responseDtos);
@@ -108,5 +128,23 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		     return new ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>>(structure,HttpStatus.OK);
 	}
 
+	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> updateJobApplication(Long applicationId,JobApplicationStatus applicationStatus,String reason) {
+		  Optional<JobApplication> optional = jobApplicationRepo.findById(applicationId);
+		  if (optional.isEmpty()) {
+		   throw new	JobApplicationNotFoundException("Application not found by this Id"); 
+		}
+		  JobApplication jobApplication = optional.get();
+		  jobApplication.setJobApplicationStatus(applicationStatus);
+		  jobApplication.setReasonForRejection(reason);
+		  JobApplication jobApplication2 = jobApplicationRepo.save(jobApplication);
+		  JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication2, JobApplicationResponseDto.class);
+		  
+		  ResponseStructure<JobApplicationResponseDto>structure= new ResponseStructure<JobApplicationResponseDto>();
+		  structure.setData(responseDto);
+		  structure.setMessage("Job Application Updated successfully");
+		  structure.setStatusCode(HttpStatus.OK.value());
+		  return new ResponseEntity<ResponseStructure<JobApplicationResponseDto>>(structure,HttpStatus.OK);
+		
+	}
 	
 }
