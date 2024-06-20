@@ -9,9 +9,7 @@ import lombok.Data;
 
 @Data
 public class JobApplicationResponseDto {
-
-	
-     private long jobApplicationId;
+    private long jobApplicationId;
 	private LocalDateTime jobApplicationDateTime;
 	private long jobSerial;
 	private String jobTitle;

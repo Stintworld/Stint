@@ -21,11 +21,13 @@ import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.vihaan.dto.ApplicantRequestDto;
 import com.vihaan.dto.ApplicantResponseDto;
+import com.vihaan.dto.JobApplicationResponseDto;
 import com.vihaan.dto.LoginDto;
 import com.vihaan.dto.ProfileDto;
 import com.vihaan.entity.Admin;
 import com.vihaan.entity.Applicant;
 import com.vihaan.entity.ISDELETED;
+import com.vihaan.entity.JobApplication;
 import com.vihaan.entity.Profile;
 import com.vihaan.exception.EmailNotFoundException;
 import com.vihaan.exception.ForbiddenOperationException;
@@ -226,7 +228,14 @@ public class ApplicantServiceImpl implements ApplicantService{
 			throw new UserNotFoundByIdException("Applicant Not found by this Id");
 		}
 		  Applicant applicant = optional.get();
+		  List<JobApplication> jobApplications = applicant.getJobApplications();
+		  List<JobApplicationResponseDto>responseDtos= new ArrayList<JobApplicationResponseDto>();
+		  for (JobApplication jobApplication : jobApplications) {
+			  JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+			  responseDtos.add(responseDto);
+		}
 		  ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
+		  responseDto.setApplicationResponseDtos(responseDtos);
 		  ResponseStructure<ApplicantResponseDto>structure= new ResponseStructure<ApplicantResponseDto>();
 		  structure.setData(responseDto);
 		  structure.setMessage("Applicant Data fetched sucessfully");
