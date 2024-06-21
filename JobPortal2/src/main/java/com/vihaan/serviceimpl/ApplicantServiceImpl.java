@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -276,6 +277,22 @@ public class ApplicantServiceImpl implements ApplicantService{
 		structure.setMessage("Applicants fetched ");
 		structure.setStatusCode(HttpStatus.OK.value());
 		
+		return new ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>>(structure,HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>> getAllApplicants() {
+		List<Applicant> applicants = applicantRepo.findAll();
+		List<ApplicantResponseDto>responseDtos= new ArrayList<ApplicantResponseDto>();
+		for (Applicant applicant : applicants) {
+			ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
+			responseDtos.add(responseDto);
+		}
+		ResponseStructure<List<ApplicantResponseDto>>structure= new ResponseStructure<List<ApplicantResponseDto>>();
+		structure.setData(responseDtos);
+		structure.setMessage("All Applicant Data fetched successfully");
+		structure.setStatusCode(HttpStatus.OK.value());
+		;
 		return new ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>>(structure,HttpStatus.OK);
 	}
 

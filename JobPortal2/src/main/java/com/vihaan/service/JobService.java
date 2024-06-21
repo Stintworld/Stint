@@ -25,4 +25,5 @@ public interface JobService {
 	
 	public ResponseEntity<ResponseStructure<String>> deleteJob(Long jobId);
 	
+	
 }

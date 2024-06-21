@@ -48,4 +48,8 @@ public class JobApplicationController {
 	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> updateJobApplication(@PathVariable Long applicationId,@RequestParam JobApplicationStatus applicationStatus,String reason){
 		return jobApplicationService.updateJobApplication(applicationId,applicationStatus,reason);
 	}
+	@GetMapping("jobapplications/getalljobapplications")
+	public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>> getAllJobApplications(){
+		return jobApplicationService.getAllJobApplications();
+	}
 }

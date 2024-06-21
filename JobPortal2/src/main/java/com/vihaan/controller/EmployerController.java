@@ -1,5 +1,7 @@
 package com.vihaan.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -63,6 +65,8 @@ public class EmployerController {
 	public ResponseEntity<ResponseStructure<String>> deleteEmployer(@PathVariable long id,@PathVariable String password) {
 		return employerService.deleteEmployer(id, password);
 	}
-	
-	
+	@GetMapping("employer/getallemployers")
+	public ResponseEntity<ResponseStructure<List<EmployerResponseDto>>> getAllEmployers(){
+		return employerService.getAllEmployers();
+	}
 }

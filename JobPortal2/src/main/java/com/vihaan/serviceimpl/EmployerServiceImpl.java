@@ -1,5 +1,7 @@
 package com.vihaan.serviceimpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -209,6 +211,21 @@ public class EmployerServiceImpl implements EmployerService{
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure,HttpStatus.OK);
 		
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<EmployerResponseDto>>> getAllEmployers() {
+		List<Employer> employers = employerRepo.findAll();
+		List<EmployerResponseDto>responseDtos=new ArrayList<EmployerResponseDto>();
+		for (Employer employer : employers) {
+			EmployerResponseDto responseDto = this.modelMapper.map(employer, EmployerResponseDto.class);
+			responseDtos.add(responseDto);
+		}
+		ResponseStructure<List<EmployerResponseDto>>structure= new ResponseStructure<List<EmployerResponseDto>>();
+		structure.setData(responseDtos);
+		structure.setMessage("All employers data fetched successfully");
+		structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<List<EmployerResponseDto>>>(structure,HttpStatus.OK);
 	}
 
 }

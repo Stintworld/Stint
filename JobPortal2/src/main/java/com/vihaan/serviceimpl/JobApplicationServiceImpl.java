@@ -152,5 +152,19 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		  return new ResponseEntity<ResponseStructure<JobApplicationResponseDto>>(structure,HttpStatus.OK);
 		
 	}
+	@Override
+	public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>> getAllJobApplications() {
+		List<JobApplication> jobApplications = jobApplicationRepo.findAll();
+		List<JobApplicationResponseDto>responseDtos=new ArrayList<JobApplicationResponseDto>();
+		for (JobApplication jobApplication : jobApplications) {
+			JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+			responseDtos.add(responseDto);
+		}
+		ResponseStructure<List<JobApplicationResponseDto>>structure= new ResponseStructure<List<JobApplicationResponseDto>>();
+		structure.setData(responseDtos);
+		structure.setStatusCode(HttpStatus.OK.value());
+		structure.setMessage("All Job Applications fetched successfully");
+		return new ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>>(structure,HttpStatus.OK);
+	}
 	
 }

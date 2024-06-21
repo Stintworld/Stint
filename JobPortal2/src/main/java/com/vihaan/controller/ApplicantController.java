@@ -83,4 +83,9 @@ public class ApplicantController {
 	public ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>> getApplicantListByJobId(@PathVariable Long jobId) {
 		return applicantService.getApplicantListByJobId(jobId);
 	}
+	
+	@GetMapping("applicants/getallapplicants")
+	public ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>> getAllApplicants(){
+		return applicantService.getAllApplicants();
+	}
 }
