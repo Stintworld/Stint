@@ -158,6 +158,13 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		List<JobApplicationResponseDto>responseDtos=new ArrayList<JobApplicationResponseDto>();
 		for (JobApplication jobApplication : jobApplications) {
 			JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+			 responseDto.setCompany(jobApplication.getJob().getCompany());
+			  responseDto.setCompanyWebsite(jobApplication.getJob().getCompanyWebsite());
+			  responseDto.setSkills(jobApplication.getJob().getSkills());
+			  responseDto.setEmployerName(jobApplication.getJob().getEmployer().getEmployerName());
+			  responseDto.setEmployerEmail(jobApplication.getJob().getEmployer().getEmployerEmail());
+			  responseDto.setEmployerPhNo(jobApplication.getJob().getEmployer().getEmployerPhNo());
+			responseDto.setJobSerial(jobApplication.getJob().getJobId());
 			responseDtos.add(responseDto);
 		}
 		ResponseStructure<List<JobApplicationResponseDto>>structure= new ResponseStructure<List<JobApplicationResponseDto>>();
