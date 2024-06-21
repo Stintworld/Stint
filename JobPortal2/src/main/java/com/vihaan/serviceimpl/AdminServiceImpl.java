@@ -1,5 +1,7 @@
 package com.vihaan.serviceimpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -88,6 +90,21 @@ public class AdminServiceImpl implements AdminService {
 	        structure.setMessage("password reset done");
 	        structure.setStatusCode(HttpStatus.OK.value());
 	        return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
+	}
+	@Override
+	public ResponseEntity<ResponseStructure<List<AdminResponseDto>>> getAllAdmins() {
+		List<Admin> admins = adminRepo.findAll();
+		List<AdminResponseDto>responseDtos= new ArrayList<AdminResponseDto>();
+		for (Admin admin : admins) {
+			AdminResponseDto responseDto = this.modelMapper.map(admin, AdminResponseDto.class);
+			responseDtos.add(responseDto);
+		}
+		ResponseStructure<List<AdminResponseDto>>structure= new ResponseStructure<List<AdminResponseDto>>();
+		structure.setData(responseDtos);
+		structure.setMessage("All Admins fetched successfully");
+		structure.setStatusCode(HttpStatus.OK.value());
+		
+return new ResponseEntity<ResponseStructure<List<AdminResponseDto>>>(structure,HttpStatus.OK);
 	}
 
 }

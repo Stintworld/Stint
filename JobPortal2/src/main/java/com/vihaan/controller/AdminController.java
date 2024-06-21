@@ -1,5 +1,7 @@
 package com.vihaan.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -41,5 +43,9 @@ public class AdminController {
 	@PutMapping("admins/resetpwd")
 	public ResponseEntity<ResponseStructure<String>> resetpassword(@RequestParam String mail,@RequestParam String newPassword,@RequestParam String confirmPwd) {
 		return adminService.resetpassword(mail,newPassword,confirmPwd);
+	}
+	@GetMapping("admins/getAllAdmins")
+	public ResponseEntity<ResponseStructure<List<AdminResponseDto>>> getAllAdmins(){
+		return adminService.getAllAdmins();
 	}
 }

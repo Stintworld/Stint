@@ -17,7 +17,5 @@ public interface AdminService {
 
 	public ResponseEntity<ResponseStructure<String>> resetpassword( String mail, String newPassword, String confirmPwd);
 	
-//	public ResponseEntity<ResponseStructure<List<AdminResponseDto>>> getAllAdmins() {
-		
-//	}
+	public ResponseEntity<ResponseStructure<List<AdminResponseDto>>> getAllAdmins();
 }
