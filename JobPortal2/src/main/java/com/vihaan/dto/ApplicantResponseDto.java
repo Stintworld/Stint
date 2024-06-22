@@ -19,7 +19,7 @@ public class ApplicantResponseDto {
 	private Gender gender;
 	private String dOB;
 	private JobLevel jobLevel;	
-	private List<JobApplicationResponseDto>applicationResponseDtos;
+	private List<JobApplicationResponseDto>applications;
 	
 	private byte[] applicantImage;
 	

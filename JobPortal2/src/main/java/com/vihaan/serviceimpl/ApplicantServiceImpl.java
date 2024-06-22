@@ -233,10 +233,12 @@ public class ApplicantServiceImpl implements ApplicantService{
 		  List<JobApplicationResponseDto>responseDtos= new ArrayList<JobApplicationResponseDto>();
 		  for (JobApplication jobApplication : jobApplications) {
 			  JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+			  
 			  responseDtos.add(responseDto);
 		}
 		  ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
-		  responseDto.setApplicationResponseDtos(responseDtos);
+		  responseDto.setApplications(responseDtos);
+		  
 		  ResponseStructure<ApplicantResponseDto>structure= new ResponseStructure<ApplicantResponseDto>();
 		  structure.setData(responseDto);
 		  structure.setMessage("Applicant Data fetched sucessfully");
@@ -269,8 +271,24 @@ public class ApplicantServiceImpl implements ApplicantService{
 		List<Applicant> applicants = applicantRepo.getApplicantsByJobId(jobId);
 		List<ApplicantResponseDto>responseDtos= new ArrayList<ApplicantResponseDto>();
 		for (Applicant applicant : applicants) {
-			ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
-			responseDtos.add(responseDto);
+			List<JobApplication> applications = applicant.getJobApplications();
+			List<JobApplicationResponseDto>applicationResponseDtos=new ArrayList<JobApplicationResponseDto>();
+			for (JobApplication application : applications) {
+				if (application.getJob().getJobId()==jobId) {
+					JobApplicationResponseDto applicationResponseDto = this.modelMapper.map(application, JobApplicationResponseDto.class);
+					applicationResponseDto.setCompany(application.getJob().getCompany());
+					applicationResponseDto.setCompanyWebsite(application.getJob().getCompanyWebsite());
+					applicationResponseDto.setSkills(application.getJob().getSkills());
+					applicationResponseDto.setEmployerName(application.getJob().getEmployer().getEmployerName());
+					applicationResponseDto.setEmployerEmail(application.getJob().getEmployer().getEmployerEmail());
+					applicationResponseDto.setEmployerPhNo(application.getJob().getEmployer().getEmployerPhNo());
+					applicationResponseDto.setJobSerial(application.getJob().getJobId());
+					applicationResponseDtos.add(applicationResponseDto);
+				}
+				ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
+				responseDto.setApplications(applicationResponseDtos);
+				responseDtos.add(responseDto);
+			}
 		}
 		ResponseStructure<List<ApplicantResponseDto>>structure= new ResponseStructure<List<ApplicantResponseDto>>();
 		structure.setData(responseDtos);
@@ -286,6 +304,20 @@ public class ApplicantServiceImpl implements ApplicantService{
 		List<ApplicantResponseDto>responseDtos= new ArrayList<ApplicantResponseDto>();
 		for (Applicant applicant : applicants) {
 			ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
+			List<JobApplication> applications = applicant.getJobApplications();
+			List<JobApplicationResponseDto>applicationResponseDtos=new ArrayList<JobApplicationResponseDto>();
+			for (JobApplication application : applications) {
+				JobApplicationResponseDto applicationResponseDto = this.modelMapper.map(application, JobApplicationResponseDto.class);
+				applicationResponseDto.setCompany(application.getJob().getCompany());
+				applicationResponseDto.setCompanyWebsite(application.getJob().getCompanyWebsite());
+				applicationResponseDto.setSkills(application.getJob().getSkills());
+				applicationResponseDto.setEmployerName(application.getJob().getEmployer().getEmployerName());
+				applicationResponseDto.setEmployerEmail(application.getJob().getEmployer().getEmployerEmail());
+				applicationResponseDto.setEmployerPhNo(application.getJob().getEmployer().getEmployerPhNo());
+				applicationResponseDto.setJobSerial(application.getJob().getJobId());
+				applicationResponseDtos.add(applicationResponseDto);
+			}
+			responseDto.setApplications(applicationResponseDtos);
 			responseDtos.add(responseDto);
 		}
 		ResponseStructure<List<ApplicantResponseDto>>structure= new ResponseStructure<List<ApplicantResponseDto>>();
