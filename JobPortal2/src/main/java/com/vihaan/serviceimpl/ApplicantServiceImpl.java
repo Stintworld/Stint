@@ -66,17 +66,16 @@ public class ApplicantServiceImpl implements ApplicantService{
 		      String encodedPassword = passwordEncoder.encode(requestDto.getApplicantPassword());
 		      applicant2.setApplicantPassword(encodedPassword);
 		      applicant2.setApplicantPhNo(requestDto.getApplicantPhNo());
-		      applicant2.setDob(requestDto.getDOB());
-		      applicant2.setGender(requestDto.getGender());
+//		      applicant2.setDob(requestDto.getDOB());
+//		      applicant2.setGender(requestDto.getGender());
 		      applicant2.setIsdeleted(ISDELETED.FALSE);
-		      applicant2.setJobLevel(requestDto.getJobLevel());
+//		      applicant2.setJobLevel(requestDto.getJobLevel());
 		      Profile profile= new Profile();
 		      profile.setEmail(applicant2.getApplicantEmail());
 		      profile.setPhNo(applicant2.getApplicantPhNo());
 		      profile.setFirstName(applicant2.getApplicantName());
 		      profileRepo.save(profile);
-		      applicant2.setProfile(profile);
-		      
+		      applicant2.setProfile(profile);  
 		      Applicant applicant3 = applicantRepo.save(applicant2);
 		      ApplicantResponseDto responseDto = this.modelMapper.map(applicant3, ApplicantResponseDto.class);
 		      ResponseStructure<ApplicantResponseDto>responseStructure= new ResponseStructure<ApplicantResponseDto>();
@@ -274,7 +273,7 @@ public class ApplicantServiceImpl implements ApplicantService{
 			List<JobApplication> applications = applicant.getJobApplications();
 			List<JobApplicationResponseDto>applicationResponseDtos=new ArrayList<JobApplicationResponseDto>();
 			for (JobApplication application : applications) {
-				if (application.getJob().getJobId()==jobId) {
+				if (application.getJob().getJobId()==jobId&&application.getApplicant().getApplicantId()==applicant.getApplicantId()) {
 					JobApplicationResponseDto applicationResponseDto = this.modelMapper.map(application, JobApplicationResponseDto.class);
 					applicationResponseDto.setCompany(application.getJob().getCompany());
 					applicationResponseDto.setCompanyWebsite(application.getJob().getCompanyWebsite());
@@ -283,12 +282,16 @@ public class ApplicantServiceImpl implements ApplicantService{
 					applicationResponseDto.setEmployerEmail(application.getJob().getEmployer().getEmployerEmail());
 					applicationResponseDto.setEmployerPhNo(application.getJob().getEmployer().getEmployerPhNo());
 					applicationResponseDto.setJobSerial(application.getJob().getJobId());
+					applicationResponseDto.setOrganisationLogo(application.getJob().getOrganisationLogo());
 					applicationResponseDtos.add(applicationResponseDto);
+					
 				}
-				ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
-				responseDto.setApplications(applicationResponseDtos);
-				responseDtos.add(responseDto);
+				
 			}
+			ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
+//			responseDto.setDOB(applicant.getDob());
+			responseDto.setApplications(applicationResponseDtos);
+			responseDtos.add(responseDto);
 		}
 		ResponseStructure<List<ApplicantResponseDto>>structure= new ResponseStructure<List<ApplicantResponseDto>>();
 		structure.setData(responseDtos);

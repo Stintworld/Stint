@@ -28,13 +28,13 @@ public class ApplicantRequestDto {
 	@Max(value = 9999999999l,message = "Phone number cannot exceed `10` Digits!!!")
 	private long applicantPhNo;
 	
-	@NotBlank(message = "Gender Mandatory")
-	private Gender gender;
+//	@NotBlank(message = "Gender Mandatory")
+//	private Gender gender;
 	
-	@NotBlank(message = "DOB Mandatory")
-	private String dOB;
+//	@NotBlank(message = "DOB Mandatory")
+//	private String dOB;
 	
-	private JobLevel jobLevel;
+//	private JobLevel jobLevel;
 
 	
 	

@@ -16,9 +16,9 @@ public class ApplicantResponseDto {
 	private String applicantName;
 	private String applicantEmail;
 	private long applicantPhNo;
-	private Gender gender;
-	private String dOB;
-	private JobLevel jobLevel;	
+//	private Gender gender;
+//	private String dOB;
+//	private JobLevel jobLevel;	
 	private List<JobApplicationResponseDto>applications;
 	
 	private byte[] applicantImage;
