@@ -69,4 +69,9 @@ public class EmployerController {
 	public ResponseEntity<ResponseStructure<List<EmployerResponseDto>>> getAllEmployers(){
 		return employerService.getAllEmployers();
 	}
+	
+	@PutMapping("employer/delete/{id}")
+	public ResponseEntity<ResponseStructure<String>> deleteEmployer(@PathVariable long id) {
+		return employerService.deleteEmployer(id);
+	}
 }

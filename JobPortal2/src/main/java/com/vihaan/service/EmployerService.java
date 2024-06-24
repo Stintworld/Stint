@@ -36,4 +36,6 @@ public interface EmployerService {
 	public ResponseEntity<ResponseStructure<String>> deleteEmployer(long userid,String password);
 	
 	public ResponseEntity<ResponseStructure<List<EmployerResponseDto>>> getAllEmployers(); 
+	
+	public ResponseEntity<ResponseStructure<String>> deleteEmployer(long userid);
 }

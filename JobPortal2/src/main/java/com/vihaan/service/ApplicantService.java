@@ -43,4 +43,6 @@ public ResponseEntity<ResponseStructure<String>> resetPassword(String mail, Stri
 public ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>> getApplicantListByJobId(Long jobId);
 
 public ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>> getAllApplicants() ;
+
+public ResponseEntity<ResponseStructure<String>> deleteApplicant(Long applicantId);
 }

@@ -88,4 +88,9 @@ public class ApplicantController {
 	public ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>> getAllApplicants(){
 		return applicantService.getAllApplicants();
 	}
+	
+	@PutMapping("applicants/delete/{applicantId}")
+	public ResponseEntity<ResponseStructure<String>> deleteApplicant(@PathVariable Long applicantId){
+		return applicantService.deleteApplicant(applicantId);
+	}
 }

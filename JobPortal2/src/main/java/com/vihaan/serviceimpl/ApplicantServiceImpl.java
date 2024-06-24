@@ -56,8 +56,8 @@ public class ApplicantServiceImpl implements ApplicantService{
 	private ProfileRepo profileRepo;
 	@Override
 	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> addApplicant(ApplicantRequestDto requestDto) {
-		      Applicant applicant = applicantRepo.findByApplicantEmail(requestDto.getApplicantEmail());
-		      if (applicant!=null) {
+		      Optional<Applicant> applicant = applicantRepo.findByApplicantEmail(requestDto.getApplicantEmail());
+		      if (applicant.isPresent()&&applicant.get().getIsdeleted()==ISDELETED.FALSE) {
 				throw new UserWithSameEmailExist("Applicant With Same Email Exist");
 			}
 		      Applicant applicant2= new Applicant();
@@ -136,11 +136,13 @@ public class ApplicantServiceImpl implements ApplicantService{
 	 
 	@Override
 	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> applicantLogin( String emailId, String password) {
-		        Applicant applicant = applicantRepo.findByApplicantEmail(emailId);
-		        if (applicant==null) {
+		        Optional<Applicant> optional = applicantRepo.findByApplicantEmail(emailId);
+		        if (optional.isEmpty()||optional.get().getIsdeleted()==ISDELETED.TRUE) {
 					throw new EmailNotFoundException("Applicant details not found");
 					
 				}
+		        Applicant applicant = optional.get()	;	    
+		        
 		        if (!passwordEncoder.matches(password, applicant.getApplicantPassword())) {
 					throw new PasswordMissMatchException("Wrong Password ,please try again");
 				}
@@ -160,7 +162,7 @@ public class ApplicantServiceImpl implements ApplicantService{
 	public ResponseEntity<ResponseStructure<String>> addApplicantResume(Long applicantId, MultipartFile file)
 			throws IOException {
 		Optional<Applicant> optional = applicantRepo.findById(applicantId);
-		 if (optional.isEmpty()) {
+		 if (optional.isEmpty()||optional.get().getIsdeleted()==ISDELETED.TRUE) {
 			throw new UserNotFoundByIdException("User not found by this id");
 		}
 		 Applicant applicant = optional.get();
@@ -183,7 +185,7 @@ public class ApplicantServiceImpl implements ApplicantService{
 	public ResponseEntity<paymentLinkResponse> createPaymentLink(Long applicantId) throws RazorpayException {
 		
 		Optional<Applicant> optional = applicantRepo.findById(applicantId);
-		if (optional.isEmpty()) {
+		if (optional.isEmpty()||optional.get().getIsdeleted()==ISDELETED.TRUE) {
 		    throw new UserNotFoundByIdException("Applicant ot found to accept amount fom him");
 		    
 		}
@@ -224,7 +226,7 @@ public class ApplicantServiceImpl implements ApplicantService{
 	@Override
 	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> getApplicantById(Long applicantId) {
 		  Optional<Applicant> optional = applicantRepo.findById(applicantId);
-		  if (optional.isEmpty()) {
+		  if (optional.isEmpty()||optional.get().getIsdeleted()==ISDELETED.TRUE) {
 			throw new UserNotFoundByIdException("Applicant Not found by this Id");
 		}
 		  Applicant applicant = optional.get();
@@ -247,11 +249,13 @@ public class ApplicantServiceImpl implements ApplicantService{
 
 	@Override
 	public ResponseEntity<ResponseStructure<String>> resetPassword(String mail, String newPassword, String confirmPwd) {
-		Applicant applicant = applicantRepo.findByApplicantEmail(mail);
-		   if (applicant==null) {
-				throw new EmailNotFoundException("applicant details not found");
-				
-			}
+		Optional<Applicant> optional = applicantRepo.findByApplicantEmail(mail);
+        if (optional.isEmpty()||optional.get().getIsdeleted()==ISDELETED.TRUE) {
+			throw new EmailNotFoundException("Applicant details not found");
+			
+		}
+        Applicant applicant = optional.get();
+		   
 	        if (!newPassword.equals(confirmPwd)) {
 				throw new ForbiddenOperationException("NewPassword and Confirm password mismatch");
 			}
@@ -270,30 +274,32 @@ public class ApplicantServiceImpl implements ApplicantService{
 		List<Applicant> applicants = applicantRepo.getApplicantsByJobId(jobId);
 		List<ApplicantResponseDto>responseDtos= new ArrayList<ApplicantResponseDto>();
 		for (Applicant applicant : applicants) {
-			List<JobApplication> applications = applicant.getJobApplications();
-			List<JobApplicationResponseDto>applicationResponseDtos=new ArrayList<JobApplicationResponseDto>();
-			for (JobApplication application : applications) {
-				if (application.getJob().getJobId()==jobId&&application.getApplicant().getApplicantId()==applicant.getApplicantId()) {
-					JobApplicationResponseDto applicationResponseDto = this.modelMapper.map(application, JobApplicationResponseDto.class);
-					applicationResponseDto.setCompany(application.getJob().getCompany());
-					applicationResponseDto.setCompanyWebsite(application.getJob().getCompanyWebsite());
-					applicationResponseDto.setSkills(application.getJob().getSkills());
-					applicationResponseDto.setEmployerName(application.getJob().getEmployer().getEmployerName());
-					applicationResponseDto.setEmployerEmail(application.getJob().getEmployer().getEmployerEmail());
-					applicationResponseDto.setEmployerPhNo(application.getJob().getEmployer().getEmployerPhNo());
-					applicationResponseDto.setJobSerial(application.getJob().getJobId());
-					applicationResponseDto.setOrganisationLogo(application.getJob().getOrganisationLogo());
-					applicationResponseDto.setJobLevel(applicant.getProfile().getJobLevel());
-					applicationResponseDto.setApplicantLocation(applicant.getProfile().getApplicantLocation());
-					applicationResponseDtos.add(applicationResponseDto);
+			if (applicant.getIsdeleted()==ISDELETED.FALSE) {
+				List<JobApplication> applications = applicant.getJobApplications();
+				List<JobApplicationResponseDto>applicationResponseDtos=new ArrayList<JobApplicationResponseDto>();
+				for (JobApplication application : applications) {
+					if (application.getJob().getJobId()==jobId&&application.getApplicant().getApplicantId()==applicant.getApplicantId()) {
+						JobApplicationResponseDto applicationResponseDto = this.modelMapper.map(application, JobApplicationResponseDto.class);
+						applicationResponseDto.setCompany(application.getJob().getCompany());
+						applicationResponseDto.setCompanyWebsite(application.getJob().getCompanyWebsite());
+						applicationResponseDto.setSkills(application.getJob().getSkills());
+						applicationResponseDto.setEmployerName(application.getJob().getEmployer().getEmployerName());
+						applicationResponseDto.setEmployerEmail(application.getJob().getEmployer().getEmployerEmail());
+						applicationResponseDto.setEmployerPhNo(application.getJob().getEmployer().getEmployerPhNo());
+						applicationResponseDto.setJobSerial(application.getJob().getJobId());
+						applicationResponseDto.setOrganisationLogo(application.getJob().getOrganisationLogo());
+						applicationResponseDto.setJobLevel(applicant.getProfile().getJobLevel());
+						applicationResponseDto.setApplicantLocation(applicant.getProfile().getApplicantLocation());
+						applicationResponseDtos.add(applicationResponseDto);
+						
+					}
 					
 				}
-				
+				ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
+//				responseDto.setDOB(applicant.getDob());
+				responseDto.setApplications(applicationResponseDtos);
+				responseDtos.add(responseDto);
 			}
-			ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
-//			responseDto.setDOB(applicant.getDob());
-			responseDto.setApplications(applicationResponseDtos);
-			responseDtos.add(responseDto);
 		}
 		ResponseStructure<List<ApplicantResponseDto>>structure= new ResponseStructure<List<ApplicantResponseDto>>();
 		structure.setData(responseDtos);
@@ -308,22 +314,25 @@ public class ApplicantServiceImpl implements ApplicantService{
 		List<Applicant> applicants = applicantRepo.findAll();
 		List<ApplicantResponseDto>responseDtos= new ArrayList<ApplicantResponseDto>();
 		for (Applicant applicant : applicants) {
-			ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
-			List<JobApplication> applications = applicant.getJobApplications();
-			List<JobApplicationResponseDto>applicationResponseDtos=new ArrayList<JobApplicationResponseDto>();
-			for (JobApplication application : applications) {
-				JobApplicationResponseDto applicationResponseDto = this.modelMapper.map(application, JobApplicationResponseDto.class);
-				applicationResponseDto.setCompany(application.getJob().getCompany());
-				applicationResponseDto.setCompanyWebsite(application.getJob().getCompanyWebsite());
-				applicationResponseDto.setSkills(application.getJob().getSkills());
-				applicationResponseDto.setEmployerName(application.getJob().getEmployer().getEmployerName());
-				applicationResponseDto.setEmployerEmail(application.getJob().getEmployer().getEmployerEmail());
-				applicationResponseDto.setEmployerPhNo(application.getJob().getEmployer().getEmployerPhNo());
-				applicationResponseDto.setJobSerial(application.getJob().getJobId());
-				applicationResponseDtos.add(applicationResponseDto);
+			if (applicant.getIsdeleted()==ISDELETED.FALSE) {
+				ApplicantResponseDto responseDto = this.modelMapper.map(applicant, ApplicantResponseDto.class);
+				List<JobApplication> applications = applicant.getJobApplications();
+				List<JobApplicationResponseDto>applicationResponseDtos=new ArrayList<JobApplicationResponseDto>();
+				for (JobApplication application : applications) {
+					JobApplicationResponseDto applicationResponseDto = this.modelMapper.map(application, JobApplicationResponseDto.class);
+					applicationResponseDto.setCompany(application.getJob().getCompany());
+					applicationResponseDto.setCompanyWebsite(application.getJob().getCompanyWebsite());
+					applicationResponseDto.setSkills(application.getJob().getSkills());
+					applicationResponseDto.setEmployerName(application.getJob().getEmployer().getEmployerName());
+					applicationResponseDto.setEmployerEmail(application.getJob().getEmployer().getEmployerEmail());
+					applicationResponseDto.setEmployerPhNo(application.getJob().getEmployer().getEmployerPhNo());
+					applicationResponseDto.setJobSerial(application.getJob().getJobId());
+					applicationResponseDtos.add(applicationResponseDto);
+				}
+				responseDto.setApplications(applicationResponseDtos);
+				responseDtos.add(responseDto);
 			}
-			responseDto.setApplications(applicationResponseDtos);
-			responseDtos.add(responseDto);
+			
 		}
 		ResponseStructure<List<ApplicantResponseDto>>structure= new ResponseStructure<List<ApplicantResponseDto>>();
 		structure.setData(responseDtos);
@@ -333,6 +342,23 @@ public class ApplicantServiceImpl implements ApplicantService{
 		return new ResponseEntity<ResponseStructure<List<ApplicantResponseDto>>>(structure,HttpStatus.OK);
 	}
 
+	
+
+	@Override
+	public ResponseEntity<ResponseStructure<String>> deleteApplicant(Long applicantId) {
+		Optional<Applicant> optional = applicantRepo.findById(applicantId);
+		if (optional.isEmpty()||optional.get().getIsdeleted()==ISDELETED.TRUE){
+			throw new UserNotFoundByIdException("Applicant by this id not found");
+		}
+		Applicant applicant = optional.get();
+		applicant.setIsdeleted(ISDELETED.TRUE);
+		applicantRepo.save(applicant);
+		ResponseStructure<String>structure= new ResponseStructure<String>();
+		structure.setData("Applicant data deleted");
+		structure.setMessage("Applicant Data deleted successfully");
+		structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
+	}
 	
 
 	
