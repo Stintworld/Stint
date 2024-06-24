@@ -18,7 +18,7 @@ public class JobApplicationResponseDto {
 	private String company;
 	private double salary;
 	 private JobApplicationStatus jobApplicationStatus;
-	 
+	 private String applicantLocation;
 	private List<String>skills;
 	private String companyWebsite;
 	private String jobLocation;

@@ -17,7 +17,7 @@ public class ProfileDto {
 	private long phNo;
 	private String dob;
 	private Gender gender;
-	
+	private String applicantLocation;
 	private String school_10th_Name;
 	private String school_10th_YOP;
 	private String school_10th_Perc;

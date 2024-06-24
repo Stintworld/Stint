@@ -283,6 +283,8 @@ public class ApplicantServiceImpl implements ApplicantService{
 					applicationResponseDto.setEmployerPhNo(application.getJob().getEmployer().getEmployerPhNo());
 					applicationResponseDto.setJobSerial(application.getJob().getJobId());
 					applicationResponseDto.setOrganisationLogo(application.getJob().getOrganisationLogo());
+					applicationResponseDto.setJobLevel(applicant.getProfile().getJobLevel());
+					applicationResponseDto.setApplicantLocation(applicant.getProfile().getApplicantLocation());
 					applicationResponseDtos.add(applicationResponseDto);
 					
 				}
