@@ -1,6 +1,8 @@
 package com.vihaan.serviceimpl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,21 @@ public class EnqueryServiceImpl implements EnqueryService {
 		structure.setMessage("Enquery mail sent to admin successfully");
 		structure.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<EnqueryDto>>> getAllEnqueries() {
+		List<Enquery> enqueries = enqueryRepo.findAll();
+		List<EnqueryDto>enqueryDtos=new ArrayList<EnqueryDto>();
+		for (Enquery enquery : enqueries) {
+			EnqueryDto enqueryDto = this.modelMapper.map(enquery, EnqueryDto.class);
+			enqueryDtos.add(enqueryDto);
+		}
+		ResponseStructure<List<EnqueryDto>>structure= new ResponseStructure<List<EnqueryDto>>();
+		structure.setData(enqueryDtos);
+		structure.setMessage("All enqueries fethed successfully");
+		structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<List<EnqueryDto>>>(structure,HttpStatus.OK);
 	}
 
 }
