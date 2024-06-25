@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.vihaan.dto.AdminRequestDto;
 import com.vihaan.dto.AdminResponseDto;
 import com.vihaan.entity.Admin;
+import com.vihaan.entity.ISDELETED;
 import com.vihaan.exception.EmailNotFoundException;
 import com.vihaan.exception.ForbiddenOperationException;
 import com.vihaan.exception.PasswordMissMatchException;
@@ -34,8 +35,8 @@ public class AdminServiceImpl implements AdminService {
     private PasswordEncoder passwordEncoder;
 	@Override
 	public ResponseEntity<ResponseStructure<AdminResponseDto>> addAdmin(AdminRequestDto dto) {
-		  Admin admin = adminRepo.findByAdminEmail(dto.getAdminEmail());
-		  if (admin!=null) {
+		  Optional<Admin> optional = adminRepo.findByAdminEmail(dto.getAdminEmail());
+		  if (optional.isPresent()&&optional.get().getDeleteCondition()==ISDELETED.FALSE) {
 			throw new UserWithSameEmailExist("Admin with same email exist");
 		}
 		  Admin admin2= new Admin();
@@ -55,11 +56,12 @@ public class AdminServiceImpl implements AdminService {
 	}
 	@Override
 	public ResponseEntity<ResponseStructure<AdminResponseDto>> adminLogin(String email, String password) {
-		   Admin admin = adminRepo.findByAdminEmail(email);
-		   if (admin==null) {
+		   Optional<Admin> optional = adminRepo.findByAdminEmail(email);
+		   if (optional.isEmpty()||optional.get().getDeleteCondition()==ISDELETED.TRUE) {
 				throw new EmailNotFoundException("Admin details not found");
 				
 			}
+		   Admin admin = optional.get();
 	        if (!passwordEncoder.matches(password, admin.getAdminPassword())) {
 				throw new PasswordMissMatchException("Wrong Password ,please try again");
 			}
@@ -74,14 +76,15 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public ResponseEntity<ResponseStructure<String>> resetpassword(String mail, String newPassword,
 			String confirmPwd) {
-		Admin admin = adminRepo.findByAdminEmail(mail);
-		   if (admin==null) {
+		Optional<Admin> optional = adminRepo.findByAdminEmail(mail);
+		   if (optional.isEmpty()||optional.get().getDeleteCondition()==ISDELETED.TRUE) {
 				throw new EmailNotFoundException("Admin details not found");
 				
 			}
 	        if (!newPassword.equals(confirmPwd)) {
 				throw new ForbiddenOperationException("NewPassword and Confirm password mismatch");
 			}
+	        Admin admin = optional.get();
 	        String encodedPassword = passwordEncoder.encode(newPassword);
 	        admin.setAdminPassword(encodedPassword);
 	        adminRepo.save(admin);
@@ -106,5 +109,28 @@ public class AdminServiceImpl implements AdminService {
 		
 return new ResponseEntity<ResponseStructure<List<AdminResponseDto>>>(structure,HttpStatus.OK);
 	}
+	@Override
+	public ResponseEntity<ResponseStructure<String>> deleteAdmin(Long adminHeadId, Long adminId) {
 
+           if (adminHeadId!=1) {
+			throw new ForbiddenOperationException("Only Admin can Delete Admin");
+		}
+           Optional<Admin> optional = adminRepo.findById(adminId);
+           if (optional.isEmpty()) {
+			throw new UserNotFoundByIdException("Admin with this id not found");
+		}
+           if (adminId==1) {
+			 throw new ForbiddenOperationException("Admin Head cannot delete his account himself");
+		}
+           Admin admin = optional.get();
+        	admin.setDeleteCondition(ISDELETED.TRUE);
+           adminRepo.save(admin);
+           ResponseStructure<String>structure= new ResponseStructure<String>();
+           structure.setData("Admin Data deleted ");
+           structure.setMessage("Admin Data deleted successfully");
+           structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
+	}
+
+	
 }

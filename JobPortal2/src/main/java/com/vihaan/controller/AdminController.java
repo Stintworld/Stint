@@ -31,8 +31,6 @@ public class AdminController {
 	
 	@PostMapping("admins/signup")
 	public ResponseEntity<ResponseStructure<AdminResponseDto>> addAdmin(@RequestBody AdminRequestDto dto) {
-		System.out.println(dto.getAdminPassword());
-		System.out.println(dto.getAdminEmail());
 		return adminService.addAdmin(dto);
 	}
 	@GetMapping("admins/login")

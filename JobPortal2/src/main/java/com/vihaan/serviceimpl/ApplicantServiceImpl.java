@@ -223,6 +223,8 @@ public class ApplicantServiceImpl implements ApplicantService{
 		return new ResponseEntity<paymentLinkResponse>(linkResponse,HttpStatus.CREATED);
 	}
 
+	
+	//This endpoint not used in App
 	@Override
 	public ResponseEntity<ResponseStructure<ApplicantResponseDto>> getApplicantById(Long applicantId) {
 		  Optional<Applicant> optional = applicantRepo.findById(applicantId);
@@ -327,6 +329,9 @@ public class ApplicantServiceImpl implements ApplicantService{
 					applicationResponseDto.setEmployerEmail(application.getJob().getEmployer().getEmployerEmail());
 					applicationResponseDto.setEmployerPhNo(application.getJob().getEmployer().getEmployerPhNo());
 					applicationResponseDto.setJobSerial(application.getJob().getJobId());
+					applicationResponseDto.setOrganisationLogo(application.getJob().getOrganisationLogo());
+					applicationResponseDto.setJobLevel(applicant.getProfile().getJobLevel());
+					applicationResponseDto.setApplicantLocation(applicant.getProfile().getApplicantLocation());
 					applicationResponseDtos.add(applicationResponseDto);
 				}
 				responseDto.setApplications(applicationResponseDtos);

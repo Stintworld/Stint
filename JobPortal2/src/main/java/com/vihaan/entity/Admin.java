@@ -17,5 +17,5 @@ public class Admin {
 	private String adminEmail;
 	private String adminPassword;
     private Long adminPhoneNo;
-    
-}
+    private ISDELETED deleteCondition;
+    }
