@@ -46,6 +46,7 @@ public class AdminServiceImpl implements AdminService {
 		 System.out.println(dto.getAdminPassword());
 		 String encodedPassword = passwordEncoder.encode(dto.getAdminPassword());
 		 admin2.setAdminPassword(encodedPassword);
+		 admin2.setDeleteCondition(ISDELETED.FALSE);
 		 Admin admin3 = adminRepo.save(admin2);
 		  AdminResponseDto adminResponseDto = this.modelMapper.map(admin3, AdminResponseDto.class);
 		  ResponseStructure<AdminResponseDto>structure= new ResponseStructure<AdminResponseDto>();

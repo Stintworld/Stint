@@ -76,6 +76,8 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 			  responseDto.setEmployerEmail(jobApplication.getJob().getEmployer().getEmployerEmail());
 			  responseDto.setEmployerPhNo(jobApplication.getJob().getEmployer().getEmployerPhNo());
 			   responseDto.setJobSerial(jobApplication.getJob().getJobId());
+			   responseDto.setOrganisationLogo(jobApplication.getJob().getOrganisationLogo());
+			   responseDto.setApplicantLocation(jobApplication.getApplicant().getProfile().getApplicantLocation());
 			   responseDtos.add(responseDto);
 		}
 		    ResponseStructure<List<JobApplicationResponseDto>>structure= new ResponseStructure<List<JobApplicationResponseDto>>();

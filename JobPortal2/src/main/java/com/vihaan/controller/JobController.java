@@ -64,4 +64,8 @@ public class JobController {
 	public ResponseEntity<ResponseStructure<String>> deleteJob(@PathVariable Long jobId){
 		return jobService.deleteJob(jobId);
 	}
+	@PutMapping("jobs/updatejobstatus/{jobId}")
+	public ResponseEntity<ResponseStructure<String>> updateJobStatus(@PathVariable Long jobId){
+		return jobService.updateJobStatus(jobId);
+	}
 }

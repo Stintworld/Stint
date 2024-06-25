@@ -25,5 +25,6 @@ public interface JobService {
 	
 	public ResponseEntity<ResponseStructure<String>> deleteJob(Long jobId);
 	
+	public ResponseEntity<ResponseStructure<String>> updateJobStatus(Long jobId) ;
 	
 }

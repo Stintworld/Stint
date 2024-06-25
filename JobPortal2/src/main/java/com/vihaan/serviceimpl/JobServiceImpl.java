@@ -75,8 +75,11 @@ public class JobServiceImpl implements JobService {
 		ArrayList<JobResponseDto>dtos= new ArrayList<JobResponseDto>();
 		
 		for (Job job : jobs) {
-			JobResponseDto jobResponseDto = this.modelMapper.map(job, JobResponseDto.class);
-			dtos.add(jobResponseDto);
+			if (job.getIsdeleted()==ISDELETED.FALSE) {
+				JobResponseDto jobResponseDto = this.modelMapper.map(job, JobResponseDto.class);
+				dtos.add(jobResponseDto);
+			}
+			
 		}
 		ResponseStructure<List<JobResponseDto>>structure= new ResponseStructure<List<JobResponseDto>>();
 		structure.setData(dtos);
@@ -163,4 +166,26 @@ public class JobServiceImpl implements JobService {
 	structure.setStatusCode(HttpStatus.OK.value());
 	return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
 }
+
+@Override
+public ResponseEntity<ResponseStructure<String>> updateJobStatus(Long jobId) {
+	    Optional<Job> optional = jobRepo.findById(jobId);
+	    if (optional.isEmpty()||optional.get().getIsdeleted()==ISDELETED.TRUE) {
+			throw new jobNotFoundException("Job with this id not found");
+		}
+	    Job job = optional.get();
+	    if (job.getJobStatus().equals("HIRING")) {
+			job.setJobStatus("STOPPED_HIRING");
+		}
+	    else {
+			job.setJobStatus("HIRING");
+		}
+	    jobRepo.save(job);
+	    ResponseStructure<String>structure= new ResponseStructure<String>();
+	    structure.setData("JOB Status Updated");
+	    structure.setMessage("JOB Status Updated Successfully");
+	    structure.setStatusCode(HttpStatus.OK.value());
+	    return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
+}
+  
 }
