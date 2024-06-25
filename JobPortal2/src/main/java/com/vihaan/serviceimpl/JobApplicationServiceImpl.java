@@ -16,6 +16,7 @@ import com.vihaan.entity.Applicant;
 import com.vihaan.entity.Job;
 import com.vihaan.entity.JobApplication;
 import com.vihaan.entity.JobApplicationStatus;
+import com.vihaan.exception.ForbiddenOperationException;
 import com.vihaan.exception.JobApplicationNotFoundException;
 import com.vihaan.exception.UserNotFoundByIdException;
 import com.vihaan.repo.ApplicantRepo;
@@ -43,6 +44,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		     Optional<Applicant> optional = applicantRepo.findById(applicantId);
 		     if (optional.isEmpty()) {
 				throw new UserNotFoundByIdException("No applicant with this Id");
+			}
+		     Applicant applicant = optional.get();
+		     List<JobApplication> applications = applicant.getJobApplications();
+		     for (JobApplication jobApplication : applications) {
+				if (jobApplication.getJob().getJobId()==jobId) {
+					throw new ForbiddenOperationException("Already applied for this job");				}
 			}
 		     JobApplication jobApplication= new JobApplication();
 		     jobApplication.setApplicant(optional.get());
