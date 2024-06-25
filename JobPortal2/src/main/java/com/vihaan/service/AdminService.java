@@ -20,4 +20,6 @@ public interface AdminService {
 	public ResponseEntity<ResponseStructure<List<AdminResponseDto>>> getAllAdmins();
 	
 	public ResponseEntity<ResponseStructure<String>> deleteAdmin(Long adminHeadId,Long adminId) ;
+	
+	public ResponseEntity<ResponseStructure<String>> deleteAdmin(Long adminId) ;
 }

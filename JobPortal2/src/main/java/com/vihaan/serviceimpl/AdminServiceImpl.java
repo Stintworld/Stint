@@ -113,10 +113,10 @@ return new ResponseEntity<ResponseStructure<List<AdminResponseDto>>>(structure,H
 	public ResponseEntity<ResponseStructure<String>> deleteAdmin(Long adminHeadId, Long adminId) {
 
            if (adminHeadId!=1) {
-			throw new ForbiddenOperationException("Only Admin can Delete Admin");
+			throw new ForbiddenOperationException("Only AdminHead can Delete Admin");
 		}
            Optional<Admin> optional = adminRepo.findById(adminId);
-           if (optional.isEmpty()) {
+           if (optional.isEmpty()||optional.get().getDeleteCondition()==ISDELETED.TRUE) {
 			throw new UserNotFoundByIdException("Admin with this id not found");
 		}
            if (adminId==1) {
@@ -129,6 +129,25 @@ return new ResponseEntity<ResponseStructure<List<AdminResponseDto>>>(structure,H
            structure.setData("Admin Data deleted ");
            structure.setMessage("Admin Data deleted successfully");
            structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
+	}
+	
+	@Override
+	public ResponseEntity<ResponseStructure<String>> deleteAdmin(Long adminId) {
+		 Optional<Admin> optional = adminRepo.findById(adminId);
+         if (optional.isEmpty()||optional.get().getDeleteCondition()==ISDELETED.TRUE) {
+			throw new UserNotFoundByIdException("Admin with this id not found");
+		}
+         if (adminId==1) {
+			 throw new ForbiddenOperationException("Admin Head cannot delete his account himself");
+		}
+         Admin admin = optional.get();
+      	admin.setDeleteCondition(ISDELETED.TRUE);
+         adminRepo.save(admin);
+         ResponseStructure<String>structure= new ResponseStructure<String>();
+         structure.setData("Admin Data deleted ");
+         structure.setMessage("Admin Data deleted successfully");
+         structure.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
 	}
 

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,5 +46,13 @@ public class AdminController {
 	@GetMapping("admins/getAllAdmins")
 	public ResponseEntity<ResponseStructure<List<AdminResponseDto>>> getAllAdmins(){
 		return adminService.getAllAdmins();
+	}
+	@PutMapping("admins/deletebyadminhead/{adminHeadId}/{adminId}")
+	public ResponseEntity<ResponseStructure<String>> deleteAdmin(@PathVariable Long adminHeadId,@PathVariable Long adminId){
+		return adminService.deleteAdmin(adminHeadId, adminId);
+	}
+	@PutMapping("admins/deletebyadmin/{adminId}")
+	public ResponseEntity<ResponseStructure<String>> deleteAdmin(@PathVariable Long adminId){
+		return adminService.deleteAdmin(adminId);
 	}
 }
