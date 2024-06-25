@@ -58,6 +58,7 @@ public class JobServiceImpl implements JobService {
                job.setEmployer(employer);
                job.setJobCreateDatetime(LocalDateTime.now());
                job.setIsdeleted(ISDELETED.FALSE);
+               job.setJobStatus("HIRING");
                employerRepo.save(employer);
                jobRepo.save(job);
                JobResponseDto jobResponseDto = this.modelMapper.map(job, JobResponseDto.class);
