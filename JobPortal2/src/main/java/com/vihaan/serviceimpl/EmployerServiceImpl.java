@@ -1,5 +1,7 @@
 package com.vihaan.serviceimpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,8 +43,8 @@ public class EmployerServiceImpl implements EmployerService{
 	private ModelMapper modelMapper;
 	@Override
 	public ResponseEntity<ResponseStructure<EmployerResponseDto>> addEmployer(EmployerRequestDto employerRequestDto) {
-		Employer employer = employerRepo.findByEmployerEmail(employerRequestDto.getEmployerEmail());
-		if (employer!=null) {
+		Optional<Employer> optional = employerRepo.findByEmployerEmail(employerRequestDto.getEmployerEmail());
+		if (optional.isPresent()&&optional.get().getDeleteStatus()==ISDELETED.FALSE) {
 			throw new UserWithSameEmailExist("Employer Email is already in Database");
 		}
 		
@@ -62,8 +64,9 @@ public class EmployerServiceImpl implements EmployerService{
 
 	@Override
 	public ResponseEntity<ResponseStructure> employerLogin( String emailId, String password) {
-		Employer employer = employerRepo.findByEmployerEmail(emailId);
-		if (employer==null) {
+		Optional<Employer> optional = employerRepo.findByEmployerEmail(emailId);
+		Employer employer = optional.get();
+		if (optional.isEmpty()||employer.getDeleteStatus()==ISDELETED.TRUE) {
 			throw new EmailNotFoundException("Email not Found in DB");
 		}
 		 else if (!passwordEncoder.matches(password, employer.getEmployerPassword())) {
@@ -110,10 +113,11 @@ public class EmployerServiceImpl implements EmployerService{
 
 	@Override
 	public ResponseEntity<ResponseStructure> sendForgotPwdLink(String toMail, String resetToken) {
-		Employer employer = employerRepo.findByEmployerEmail(toMail);
-		if (employer==null &&employer.getDeleteStatus()==ISDELETED.TRUE) {
+		Optional<Employer> optional = employerRepo.findByEmployerEmail(toMail);
+		if( optional.isEmpty()&&optional.get().getDeleteStatus()==ISDELETED.TRUE) {
 			throw new  EmailNotFoundException("Email not found in Database");
 		}
+		Employer employer = optional.get();
 		SimpleMailMessage mailMessage= new  SimpleMailMessage();
 		mailMessage.setTo(toMail);
 		mailMessage.setSubject("Link to Reset Password");
@@ -130,10 +134,11 @@ public class EmployerServiceImpl implements EmployerService{
 	@Override
 	public ResponseEntity<ResponseStructure<String>> resetPassword(String email, String newPassword,
 			String confirmPwd) {
-		Employer employer = employerRepo.findByEmployerEmail(email);
-		if (employer==null ||employer.getDeleteStatus()==ISDELETED.TRUE) {
+		Optional<Employer> optional = employerRepo.findByEmployerEmail(email);
+		if (optional.isEmpty() ||optional.get().getDeleteStatus()==ISDELETED.TRUE) {
 			throw new  EmailNotFoundException("Email not found in Database");
 		}
+		Employer employer = optional.get();
 		if (!newPassword.equals(confirmPwd)) {
 			throw new PasswordMissMatchException("password should match with confirm password");
 		}
@@ -153,7 +158,7 @@ public class EmployerServiceImpl implements EmployerService{
 	@Override
 	public ResponseEntity<ResponseStructure<EmployerResponseDto>> findUserById(Long userId) {
 		Optional<Employer> optionalEmployer = employerRepo.findById(userId);
-		if (optionalEmployer.isEmpty()) {
+		if (optionalEmployer.isEmpty()||optionalEmployer.get().getDeleteStatus()==ISDELETED.TRUE) {
 			throw new UserNotFoundByIdException("Employer not Found By this ID");
 		}
 		Employer employer = optionalEmployer.get();
@@ -172,7 +177,7 @@ public class EmployerServiceImpl implements EmployerService{
 	public ResponseEntity<ResponseStructure<String>> updateEmployer(EmployerRequestDto requestDTO,
 			Long id) {
 		 Optional<Employer> optional = employerRepo.findById(id);
-		 if (optional.isEmpty()) {
+		 if (optional.isEmpty()||optional.get().getDeleteStatus()==ISDELETED.TRUE) {
 			throw new UserNotFoundByIdException("Employer Not Found in DB to Update");
 		}
 		 Employer employer = optional.get();
@@ -209,6 +214,40 @@ public class EmployerServiceImpl implements EmployerService{
 		responseStructure.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure,HttpStatus.OK);
 		
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<List<EmployerResponseDto>>> getAllEmployers() {
+		List<Employer> employers = employerRepo.findAll();
+		List<EmployerResponseDto>responseDtos=new ArrayList<EmployerResponseDto>();
+		for (Employer employer : employers) {
+			if (employer.getDeleteStatus()==ISDELETED.FALSE) {
+				EmployerResponseDto responseDto = this.modelMapper.map(employer, EmployerResponseDto.class);
+				responseDtos.add(responseDto);
+			}
+			
+		}
+		ResponseStructure<List<EmployerResponseDto>>structure= new ResponseStructure<List<EmployerResponseDto>>();
+		structure.setData(responseDtos);
+		structure.setMessage("All employers data fetched successfully");
+		structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<List<EmployerResponseDto>>>(structure,HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<String>> deleteEmployer(long userid) {
+		Optional<Employer> optional = employerRepo.findById(userid);
+		 if (optional.isEmpty()||optional.get().getDeleteStatus()==ISDELETED.TRUE) {
+		   throw new UserNotFoundByIdException("Employer Not Found By this Id");
+		}
+		 Employer employer = optional.get();
+		 employer.setDeleteStatus(ISDELETED.TRUE);
+		 employerRepo.save(employer);
+		 ResponseStructure<String>structure= new ResponseStructure<String>();
+		 structure.setData("Employer Data deleted ");
+		 structure.setMessage("Employer Data deleted successfully ");
+		 structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
 	}
 
 }

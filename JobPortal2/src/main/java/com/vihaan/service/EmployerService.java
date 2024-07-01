@@ -1,5 +1,7 @@
 package com.vihaan.service;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -32,4 +34,8 @@ public interface EmployerService {
 			 Long id) ;
 	
 	public ResponseEntity<ResponseStructure<String>> deleteEmployer(long userid,String password);
+	
+	public ResponseEntity<ResponseStructure<List<EmployerResponseDto>>> getAllEmployers(); 
+	
+	public ResponseEntity<ResponseStructure<String>> deleteEmployer(long userid);
 }

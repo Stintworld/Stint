@@ -25,4 +25,6 @@ public interface JobApplicationService  {
 
 	public ResponseEntity<ResponseStructure<JobApplicationResponseDto>> updateJobApplication(Long applicationId,
 			JobApplicationStatus applicationStatus,String reason);
+	
+	public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>> getAllJobApplications() ;
 }

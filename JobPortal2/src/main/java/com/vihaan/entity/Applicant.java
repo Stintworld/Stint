@@ -27,9 +27,9 @@ public class Applicant {
 	private String applicantEmail;
 	private String applicantPassword;
 	private long applicantPhNo;
-	private Gender gender;
-	private String dob;
-	private JobLevel jobLevel;
+//	private Gender gender;
+//	private String dob;
+//	private JobLevel jobLevel;
 	private ISDELETED isdeleted;
 	
 	@OneToMany(mappedBy = "applicant")

@@ -8,5 +8,5 @@ import com.vihaan.entity.Admin;
 
 public interface AdminRepo extends JpaRepository<Admin, Long> {
 
-	public Admin findByAdminEmail(String email) ;
+	public Optional<Admin> findByAdminEmail(String email) ;
 }

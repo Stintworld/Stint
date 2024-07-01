@@ -16,6 +16,7 @@ import com.vihaan.entity.Applicant;
 import com.vihaan.entity.Job;
 import com.vihaan.entity.JobApplication;
 import com.vihaan.entity.JobApplicationStatus;
+import com.vihaan.exception.ForbiddenOperationException;
 import com.vihaan.exception.JobApplicationNotFoundException;
 import com.vihaan.exception.UserNotFoundByIdException;
 import com.vihaan.repo.ApplicantRepo;
@@ -43,6 +44,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		     Optional<Applicant> optional = applicantRepo.findById(applicantId);
 		     if (optional.isEmpty()) {
 				throw new UserNotFoundByIdException("No applicant with this Id");
+			}
+		     Applicant applicant = optional.get();
+		     List<JobApplication> applications = applicant.getJobApplications();
+		     for (JobApplication jobApplication : applications) {
+				if (jobApplication.getJob().getJobId()==jobId) {
+					throw new ForbiddenOperationException("Already applied for this job");				}
 			}
 		     JobApplication jobApplication= new JobApplication();
 		     jobApplication.setApplicant(optional.get());
@@ -76,6 +83,8 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 			  responseDto.setEmployerEmail(jobApplication.getJob().getEmployer().getEmployerEmail());
 			  responseDto.setEmployerPhNo(jobApplication.getJob().getEmployer().getEmployerPhNo());
 			   responseDto.setJobSerial(jobApplication.getJob().getJobId());
+			   responseDto.setOrganisationLogo(jobApplication.getJob().getOrganisationLogo());
+			   responseDto.setApplicantLocation(jobApplication.getApplicant().getProfile().getApplicantLocation());
 			   responseDtos.add(responseDto);
 		}
 		    ResponseStructure<List<JobApplicationResponseDto>>structure= new ResponseStructure<List<JobApplicationResponseDto>>();
@@ -151,6 +160,27 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		  structure.setStatusCode(HttpStatus.OK.value());
 		  return new ResponseEntity<ResponseStructure<JobApplicationResponseDto>>(structure,HttpStatus.OK);
 		
+	}
+	@Override
+	public ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>> getAllJobApplications() {
+		List<JobApplication> jobApplications = jobApplicationRepo.findAll();
+		List<JobApplicationResponseDto>responseDtos=new ArrayList<JobApplicationResponseDto>();
+		for (JobApplication jobApplication : jobApplications) {
+			JobApplicationResponseDto responseDto = this.modelMapper.map(jobApplication, JobApplicationResponseDto.class);
+			 responseDto.setCompany(jobApplication.getJob().getCompany());
+			  responseDto.setCompanyWebsite(jobApplication.getJob().getCompanyWebsite());
+			  responseDto.setSkills(jobApplication.getJob().getSkills());
+			  responseDto.setEmployerName(jobApplication.getJob().getEmployer().getEmployerName());
+			  responseDto.setEmployerEmail(jobApplication.getJob().getEmployer().getEmployerEmail());
+			  responseDto.setEmployerPhNo(jobApplication.getJob().getEmployer().getEmployerPhNo());
+			responseDto.setJobSerial(jobApplication.getJob().getJobId());
+			responseDtos.add(responseDto);
+		}
+		ResponseStructure<List<JobApplicationResponseDto>>structure= new ResponseStructure<List<JobApplicationResponseDto>>();
+		structure.setData(responseDtos);
+		structure.setStatusCode(HttpStatus.OK.value());
+		structure.setMessage("All Job Applications fetched successfully");
+		return new ResponseEntity<ResponseStructure<List<JobApplicationResponseDto>>>(structure,HttpStatus.OK);
 	}
 	
 }
